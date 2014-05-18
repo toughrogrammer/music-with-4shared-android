@@ -2,19 +2,16 @@ package my.app.free.musicloader;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -43,18 +40,18 @@ public class Bot4Shared {
     }
 
     public boolean SignIn() {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-
-        HttpPost httpPost = new HttpPost("http://www.4shared.com/web/login");
-        ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
-        pairs.add(new BasicNameValuePair("login", _id));
-        pairs.add(new BasicNameValuePair("password", _password));
-
         boolean success = false;
         do {
             try {
+                HttpClient httpClient = new DefaultHttpClient();
+
+                HttpPost httpPost = new HttpPost("http://www.4shared.com/web/login");
+                ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair("login", _id));
+                pairs.add(new BasicNameValuePair("password", _password));
                 httpPost.setEntity(new UrlEncodedFormEntity(pairs));
-                CloseableHttpResponse res = httpClient.execute(httpPost);
+
+                HttpResponse res = httpClient.execute(httpPost);
 
                 StatusLine status = res.getStatusLine();
                 if (status.getStatusCode() == 302) {
@@ -69,7 +66,6 @@ public class Bot4Shared {
                     _cookieMap.put(key, value);
                 }
 
-                res.close();
                 httpPost.abort();
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
@@ -88,12 +84,12 @@ public class Bot4Shared {
         if( ! _validAccount )
             return "";
 
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpClient httpClient = new DefaultHttpClient();
 
         // 먼저 다운로드 페이지에서 쿠키를 얻기 위해 한 번 HTTP Get을 한 번 날린다.
         HttpGet req = new HttpGet(downloadPage);
         try {
-            CloseableHttpResponse res = httpClient.execute(req);
+            HttpResponse res = httpClient.execute(req);
 
             StatusLine status = res.getStatusLine();
             if (status.getStatusCode() != 200) {
@@ -108,7 +104,6 @@ public class Bot4Shared {
                 _cookieMap.put(key, value);
             }
 
-            res.close();
             req.abort();
         } catch (ClientProtocolException e) {
             e.printStackTrace();
@@ -123,7 +118,7 @@ public class Bot4Shared {
         downloadPage = downloadPage.replaceFirst("mp3", "get");
         req = new HttpGet(downloadPage);
         try {
-            CloseableHttpResponse res = httpClient.execute(req);
+            HttpResponse res = httpClient.execute(req);
 
             StatusLine status = res.getStatusLine();
             if (status.getStatusCode() != 200) {
@@ -135,7 +130,6 @@ public class Bot4Shared {
             pageHtmlContent = Util.ReadAll(stream);
 
             entity.consumeContent();
-            res.close();
             req.abort();
         } catch (ClientProtocolException e) {
             e.printStackTrace();

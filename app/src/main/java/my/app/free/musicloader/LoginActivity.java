@@ -1,6 +1,8 @@
 package my.app.free.musicloader;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,12 +30,28 @@ public class LoginActivity extends Activity {
         editId = (EditText) findViewById(R.id.login_edittext_id);
         editPassword = (EditText) findViewById(R.id.login_edittext_password);
 
+        editId.setText("junghong456@gmail.com");
+        editPassword.setText("jung190");
+
         Button loginBtn = (Button) findViewById(R.id.login_button_signin);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String id = editId.getText().toString();
-                String password = editPassword.getText().toString();
+                final String id = editId.getText().toString();
+                final String password = editPassword.getText().toString();
+
+                AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        Bot4Shared bot = new Bot4Shared(id, password);
+                        if (bot.SignIn()) {
+                            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(i);
+                        }
+                        return null;
+                    }
+                };
+                asyncTask.execute();
             }
         });
     }
