@@ -38,7 +38,6 @@ public class FragmentSearch extends Fragment {
         _bot = bot;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
@@ -60,7 +59,12 @@ public class FragmentSearch extends Fragment {
                             for( int i = 0; i < array.length(); i ++ ) {
                                 JSONObject data = array.getJSONObject(i);
                                 Log.d("Result", data.getString("downloadPage"));
+
+                                ResultItem item = new ResultItem(data.getString("downloadPage"));
+                                _adapter.add(item);
                             }
+
+                            _adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -72,23 +76,35 @@ public class FragmentSearch extends Fragment {
             }
         });
 
-        _adapter = new ResultAdapter(getActivity(), R.layout.list_item_search_result, new ArrayList<ResultItem>());
+        ArrayList<ResultItem> dataList = new ArrayList<ResultItem>();
+        dataList.add(new ResultItem("abc"));
+        dataList.add(new ResultItem("def"));
+        _adapter = new ResultAdapter(getActivity(), R.layout.list_item_search_result, dataList);
         _resultList = (ListView) view.findViewById(R.id.fragment_search_list_result);
+        _adapter.notifyDataSetChanged();
 
         return view;
     }
 
+
     private class ResultItem {
-        public String title;
+        public String _title;
+
+        public ResultItem(String title) {
+            _title = title;
+        }
     }
+
 
     private class ResultAdapter extends ArrayAdapter<ResultItem> {
 
+        private Context _context;
         private ArrayList<ResultItem> _items;
 
         public ResultAdapter(Context context, int resource, ArrayList<ResultItem> objects) {
             super(context, resource, objects);
 
+            _context = context;
             _items = objects;
         }
 
@@ -96,14 +112,14 @@ public class FragmentSearch extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
             if (view == null) {
-                LayoutInflater vi = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = vi.inflate(R.layout.list_item_search_result, null);
+                LayoutInflater inflater = (LayoutInflater)_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.list_item_search_result, parent, false);
             }
 
             ResultItem item = _items.get(position);
             if( item != null ) {
                 TextView title = (TextView) view.findViewById(R.id.list_item_search_result_title);
-                title.setText(item.title);
+                title.setText(item._title);
             }
 
             return view;
