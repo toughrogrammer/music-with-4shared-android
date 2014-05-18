@@ -2,6 +2,9 @@ package my.app.free.musicloader;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 
 /**
@@ -14,10 +17,25 @@ import android.os.Bundle;
  */
 public class LoginActivity extends Activity {
 
+    EditText editId;
+    EditText editPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
+
+        editId = (EditText) findViewById(R.id.login_edittext_id);
+        editPassword = (EditText) findViewById(R.id.login_edittext_password);
+
+        Button loginBtn = (Button) findViewById(R.id.login_button_signin);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String id = editId.getText().toString();
+                String password = editPassword.getText().toString();
+            }
+        });
     }
 }
 
