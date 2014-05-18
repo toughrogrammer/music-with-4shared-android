@@ -3,6 +3,7 @@ package my.app.free.musicloader;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -33,10 +34,17 @@ public class MainActivity extends Activity {
      */
     ViewPager mViewPager;
 
+
+    Bot4Shared _bot;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent i = getIntent();
+        _bot = (Bot4Shared) i.getSerializableExtra("bot");
 
 
         // Create the adapter that will return a fragment for each of the three
@@ -70,46 +78,15 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
-        }
-    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public static final int NUM_OF_FRAGMENT = 1;
+        public static final int FRAGMENT_SEARCH = 0;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -119,13 +96,23 @@ public class MainActivity extends Activity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            Fragment frag = null;
+            switch (position) {
+                case FRAGMENT_SEARCH:
+                    frag = new FragmentSearch(_bot);
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+            }
+
+            return frag;
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            return NUM_OF_FRAGMENT;
         }
 
         @Override

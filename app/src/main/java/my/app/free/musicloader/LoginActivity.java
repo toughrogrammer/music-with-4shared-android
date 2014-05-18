@@ -46,6 +46,7 @@ public class LoginActivity extends Activity {
                         Bot4Shared bot = new Bot4Shared(id, password);
                         if (bot.SignIn()) {
                             Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                            i.putExtra("bot", bot);
                             startActivity(i);
                         }
                         return null;
