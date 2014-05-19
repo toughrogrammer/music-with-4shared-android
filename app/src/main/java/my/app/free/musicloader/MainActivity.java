@@ -7,14 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.Locale;
+
+import my.app.free.musicloader.search.FragmentSearch;
 
 
 public class MainActivity extends Activity {
@@ -85,8 +83,9 @@ public class MainActivity extends Activity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public static final int NUM_OF_FRAGMENT = 1;
+        public static final int NUM_OF_FRAGMENT = 2;
         public static final int FRAGMENT_SEARCH = 0;
+        public static final int FRAGMENT_DOWNLOAD = 1;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -101,7 +100,8 @@ public class MainActivity extends Activity {
                 case FRAGMENT_SEARCH:
                     frag = new FragmentSearch(_bot);
                     break;
-                case 1:
+                case FRAGMENT_DOWNLOAD:
+                    frag = new FragmentSearch(_bot);
                     break;
                 case 2:
                     break;
