@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import my.app.free.musicloader.download.DownloadAsyncTask;
+
 
 /**
  * A login screen that offers login via email/password and via Google+ sign in.
@@ -44,11 +46,15 @@ public class LoginActivity extends Activity {
                     @Override
                     protected Void doInBackground(Void... voids) {
                         Bot4Shared bot = new Bot4Shared(id, password);
-                        if (bot.SignIn()) {
-                            Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                            i.putExtra("bot", bot);
-                            startActivity(i);
-                        }
+                        bot.SignIn();
+                        DownloadAsyncTask task = new DownloadAsyncTask(bot);
+//                        task.execute("http://www.4shared.com/mp3/Wr79xnfB/107-owl_city-meteor_shower.html");
+                        task.execute("http://www.4shared.com/mp3/9YrdRUCMce/Pharrell_-_Happy__Despicable_M.htm");
+//                        if (bot.SignIn()) {
+//                            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+//                            i.putExtra("bot", bot);
+//                            startActivity(i);
+//                        }
                         return null;
                     }
                 };

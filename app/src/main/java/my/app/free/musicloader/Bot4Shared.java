@@ -79,7 +79,6 @@ public class Bot4Shared implements Serializable {
         do {
             try {
                 CloseableHttpClient httpClient = HttpClients.createDefault();
-//                HttpClient httpClient = new DefaultHttpClient();
 
                 HttpPost httpPost = new HttpPost("http://www.4shared.com/web/login");
 
@@ -222,8 +221,8 @@ public class Bot4Shared implements Serializable {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
         // 먼저 다운로드 페이지에서 쿠키를 얻기 위해 한 번 HTTP Get을 한 번 날린다.
-        HttpGet req = new HttpGet(url);
         try {
+            HttpGet req = new HttpGet(url);
             HttpResponse res = httpClient.execute(req);
 
             StatusLine status = res.getStatusLine();
@@ -242,11 +241,13 @@ public class Bot4Shared implements Serializable {
         // 이제 진짜 다운로드 페이지를 열어서 바로 다운로드를 할 수 있는 링크를 찾는다.
         String pageHtmlContent = null;
         url = url.replaceFirst("mp3", "get");
-        req = new HttpGet(url);
         try {
+            HttpGet req = new HttpGet(url);
             HttpResponse res = httpClient.execute(req);
 
             StatusLine status = res.getStatusLine();
+
+            this.SetCookie(res.getHeaders("Set-Cookie"));
 
             HttpEntity entity = res.getEntity();
             InputStream stream = entity.getContent();
@@ -254,7 +255,6 @@ public class Bot4Shared implements Serializable {
 
             entity.consumeContent();
             req.abort();
-
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -268,28 +268,34 @@ public class Bot4Shared implements Serializable {
         String directLink = element.attr("value");
 
 
-        req = new HttpGet(directLink);
-
-        String cookie = this.GetCookie();
-        req.setHeader("Cookie", cookie);
-        Log.e("bot", cookie);
-
         Log.e("bot", "start " + directLink);
         File file = new File("/mnt/sdcard/testfile.mp3");
+        if( file.exists() )
+            file.delete();
+
         FileOutputStream fos;
         try {
-            HttpResponse response = httpClient.execute(req);
+            HttpGet req = new HttpGet(directLink);
+            String cookie = this.GetCookie();
+            req.setHeader("Cookie", cookie);
+            Log.e("bot", cookie);
 
-            InputStream input = response.getEntity().getContent();
+            HttpResponse res = httpClient.execute(req);
+
+            StatusLine status = res.getStatusLine();
+            Log.e(TAG, "File download : " + status.toString());
+
+            int size = 0;
+            InputStream input = res.getEntity().getContent();
             fos = new FileOutputStream(file);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            int value;
-            while((value = reader.read()) != -1)
-            {
-                fos.write(value);
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = input.read(buffer)) != -1) {
+                size += len;
+                fos.write(buffer, 0, len);
             }
 
+            Log.e("bot", "file size : " + size);
             fos.close();
 
         } catch (IOException e) {
