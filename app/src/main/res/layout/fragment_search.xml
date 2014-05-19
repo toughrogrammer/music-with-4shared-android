@@ -24,6 +24,12 @@
 
         </LinearLayout>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test"
+        android:id="@+id/testbtn"/>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

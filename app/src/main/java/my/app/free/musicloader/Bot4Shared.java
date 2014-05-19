@@ -12,9 +12,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.SetCookie;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpParams;
 import org.json.JSONException;
@@ -23,13 +25,21 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 /**
  * Created by loki on 2014. 5. 18..
@@ -86,16 +96,9 @@ public class Bot4Shared implements Serializable {
                     success = true;
                 }
 
-                Header[] headers = res.getHeaders("Set-Cookie");
-                for (int i = 0; i < headers.length; i++) {
-                    String key = headers[i].getName();
-                    String value = headers[i].getValue();
-
-                    _cookieMap.put(key, value);
-                }
+                this.SetCookie(res.getHeaders("Set-Cookie"));
 
                 httpPost.abort();
-                httpClient.close();
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
             } catch (UnsupportedEncodingException e) {
@@ -126,15 +129,10 @@ public class Bot4Shared implements Serializable {
 
             StatusLine status = res.getStatusLine();
             if (status.getStatusCode() != 200) {
+                // Error is occurred!!
             }
 
-            Header[] headers = res.getHeaders("Set-Cookie");
-            for (int i = 0; i < headers.length; i++) {
-                String key = headers[i].getName();
-                String value = headers[i].getValue();
-
-                _cookieMap.put(key, value);
-            }
+            this.SetCookie(res.getHeaders("Set-Cookie"));
 
             HttpEntity entity = res.getEntity();
             InputStream stream = entity.getContent();
@@ -174,13 +172,7 @@ public class Bot4Shared implements Serializable {
                 return "";
             }
 
-            Header[] headers = res.getHeaders("Set-Cookie");
-            for (int i = 0; i < headers.length; i++) {
-                String key = headers[i].getName();
-                String value = headers[i].getValue();
-
-                _cookieMap.put(key, value);
-            }
+            this.SetCookie(res.getHeaders("Set-Cookie"));
 
             req.abort();
         } catch (ClientProtocolException e) {
@@ -222,9 +214,120 @@ public class Bot4Shared implements Serializable {
         Document doc = Jsoup.parse(pageHtmlContent);
         Element element = doc.getElementById("baseDownloadLink");
         String directLink = element.attr("value");
-        int index = directLink.lastIndexOf("&");
-        directLink = directLink.substring(0, index);
 
         return directLink;
+    }
+
+    public void DownloadFileWithURL(String url) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+
+        // 먼저 다운로드 페이지에서 쿠키를 얻기 위해 한 번 HTTP Get을 한 번 날린다.
+        HttpGet req = new HttpGet(url);
+        try {
+            HttpResponse res = httpClient.execute(req);
+
+            StatusLine status = res.getStatusLine();
+
+            this.SetCookie(res.getHeaders("Set-Cookie"));
+
+            req.abort();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 이제 진짜 다운로드 페이지를 열어서 바로 다운로드를 할 수 있는 링크를 찾는다.
+        String pageHtmlContent = null;
+        url = url.replaceFirst("mp3", "get");
+        req = new HttpGet(url);
+        try {
+            HttpResponse res = httpClient.execute(req);
+
+            StatusLine status = res.getStatusLine();
+
+            HttpEntity entity = res.getEntity();
+            InputStream stream = entity.getContent();
+            pageHtmlContent = Util.ReadAll(stream);
+
+            entity.consumeContent();
+            req.abort();
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Document doc = Jsoup.parse(pageHtmlContent);
+        Element element = doc.getElementById("baseDownloadLink");
+        String directLink = element.attr("value");
+
+
+        req = new HttpGet(directLink);
+
+        String cookie = this.GetCookie();
+        req.setHeader("Cookie", cookie);
+        Log.e("bot", cookie);
+
+        Log.e("bot", "start " + directLink);
+        File file = new File("/mnt/sdcard/testfile.mp3");
+        FileOutputStream fos;
+        try {
+            HttpResponse response = httpClient.execute(req);
+
+            InputStream input = response.getEntity().getContent();
+            fos = new FileOutputStream(file);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            int value;
+            while((value = reader.read()) != -1)
+            {
+                fos.write(value);
+            }
+
+            fos.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Log.e("bot", "end");
+    }
+
+    public void SetCookie(Header[] headers) {
+        for (int i = 0; i < headers.length; i++) {
+            String content = headers[i].getValue();
+            Pattern pattern = Pattern.compile("(; )");
+            for (String token : pattern.split(content)) {
+                int divideIndex = token.indexOf('=');
+                if( divideIndex == -1 ) {
+                    // Such as HttpOnly, secure, ...
+                    continue;
+                }
+                String key = token.substring(0, divideIndex);
+                String value = "";
+                if( divideIndex + 1 != token.length() ) {
+                    value = token.substring(divideIndex + 1, token.length());
+                }
+
+                _cookieMap.put(key, value);
+            }
+        }
+    }
+
+    public String GetCookie() {
+        String cookie = "";
+        Iterator<String> iterator = _cookieMap.keySet().iterator();
+        while( iterator.hasNext() ) {
+            String key = iterator.next();
+            cookie += key + "=" + _cookieMap.get(key) + "; ";
+        }
+
+        return cookie;
     }
 }

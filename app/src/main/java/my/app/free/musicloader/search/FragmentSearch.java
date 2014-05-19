@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.R;
+import my.app.free.musicloader.download.DownloadAsyncTask;
 
 /**
  * Created by loki on 2014. 5. 18..
@@ -46,7 +47,7 @@ public class FragmentSearch extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         _editQuery = (EditText) view.findViewById(R.id.fragment_search_edit_query);
-        _editQuery.setText("love don't die");
+        _editQuery.setText("meteor shower");
         _editQuery.setMaxLines(1);
 
         _searchBtn = (Button) view.findViewById(R.id.fragment_search_search);
@@ -63,6 +64,16 @@ public class FragmentSearch extends Fragment {
                 new ArrayList<SearchResultItem>());
         _resultList = (ListView) view.findViewById(R.id.fragment_search_list_result);
         _resultList.setAdapter(_adapter);
+
+
+        Button testBtn = (Button) view.findViewById(R.id.testbtn);
+        testBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DownloadAsyncTask task = new DownloadAsyncTask(_bot);
+                task.execute("http://www.4shared.com/mp3/Wr79xnfB/107-owl_city-meteor_shower.html");
+            }
+        });
 
         return view;
     }
