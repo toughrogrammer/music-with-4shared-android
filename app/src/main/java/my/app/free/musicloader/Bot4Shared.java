@@ -8,37 +8,29 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.cookie.SetCookie;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 /**
@@ -63,12 +55,15 @@ public class Bot4Shared implements Serializable {
     public String getId() {
         return _id;
     }
+
     public void setId(String id) {
         _id = id;
     }
+
     public String getPassword() {
         return _password;
     }
+
     public void setPassword(String password) {
         _password = password;
     }
@@ -156,7 +151,7 @@ public class Bot4Shared implements Serializable {
     }
 
     public String GetDirectLink(String downloadPage) {
-        if( ! _validAccount )
+        if (!_validAccount)
             return "";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -270,7 +265,7 @@ public class Bot4Shared implements Serializable {
 
         Log.e("bot", "start " + directLink);
         File file = new File("/mnt/sdcard/testfile.mp3");
-        if( file.exists() )
+        if (file.exists())
             file.delete();
 
         FileOutputStream fos;
@@ -305,19 +300,105 @@ public class Bot4Shared implements Serializable {
         Log.e("bot", "end");
     }
 
+    public void DownloadFromPreview(String url, String path) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+
+        String previewUrl = "";
+        try {
+            HttpGet req = new HttpGet(url);
+            req.addHeader(new BasicHeader("User-Agent",
+                    "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53"));
+
+            HttpResponse res = httpClient.execute(req);
+
+            StatusLine status = res.getStatusLine();
+
+            this.SetCookie(res.getHeaders("Set-Cookie"));
+
+            HttpEntity entity = res.getEntity();
+            InputStream stream = entity.getContent();
+            String content = Util.ReadAll(stream);
+            stream.close();
+            req.abort();
+
+            Document doc = Jsoup.parse(content);
+            Element element = doc.getElementById("player1");
+            Element source = element.child(0);
+            previewUrl = source.attr("src");
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            HttpGet req = new HttpGet(previewUrl);
+
+            HttpResponse res = httpClient.execute(req);
+
+            long realSize = 0;
+            Header[] headers = res.getAllHeaders();
+            for (int i = 0; i < headers.length; i++) {
+                Header h = headers[i];
+                if (h.getName().equals("")) {
+                    realSize = Long.parseLong(h.getValue());
+                }
+            }
+
+            if (realSize == 0) {
+                // this preview file has some error
+            }
+
+            File file = new File("/mnt/sdcard/testfile.mp3");
+            if (file.exists())
+                file.delete();
+
+            Log.e(TAG, "download start");
+
+            int size = 0;
+            InputStream input = res.getEntity().getContent();
+            FileOutputStream fos = new FileOutputStream(file);
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = input.read(buffer)) != -1) {
+                size += len;
+                fos.write(buffer, 0, len);
+            }
+            input.close();
+            fos.close();
+
+            Log.e(TAG, "download end : " + size);
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // close http client
+        try {
+            httpClient.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void SetCookie(Header[] headers) {
         for (int i = 0; i < headers.length; i++) {
             String content = headers[i].getValue();
             Pattern pattern = Pattern.compile("(; )");
             for (String token : pattern.split(content)) {
                 int divideIndex = token.indexOf('=');
-                if( divideIndex == -1 ) {
+                if (divideIndex == -1) {
                     // Such as HttpOnly, secure, ...
                     continue;
                 }
                 String key = token.substring(0, divideIndex);
                 String value = "";
-                if( divideIndex + 1 != token.length() ) {
+                if (divideIndex + 1 != token.length()) {
                     value = token.substring(divideIndex + 1, token.length());
                 }
 
@@ -329,7 +410,7 @@ public class Bot4Shared implements Serializable {
     public String GetCookie() {
         String cookie = "";
         Iterator<String> iterator = _cookieMap.keySet().iterator();
-        while( iterator.hasNext() ) {
+        while (iterator.hasNext()) {
             String key = iterator.next();
             cookie += key + "=" + _cookieMap.get(key) + "; ";
         }

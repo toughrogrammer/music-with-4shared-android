@@ -1,22 +1,13 @@
 package my.app.free.musicloader.search;
 
 import android.app.Fragment;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -29,12 +20,11 @@ import my.app.free.musicloader.download.DownloadAsyncTask;
  */
 public class FragmentSearch extends Fragment {
 
+    ResultAdapter _adapter;
+    Bot4Shared _bot;
     private EditText _editQuery;
     private Button _searchBtn;
     private ListView _resultList;
-    ResultAdapter _adapter;
-
-    Bot4Shared _bot;
 
     public FragmentSearch(Bot4Shared bot) {
         super();

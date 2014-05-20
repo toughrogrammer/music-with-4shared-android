@@ -1,9 +1,6 @@
 package my.app.free.musicloader.search;
 
-import android.app.SearchableInfo;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,13 +28,13 @@ public class SearchAsyncTask extends AsyncTask<String, Integer, ArrayList<Search
         ArrayList<SearchResultItem> retList = new ArrayList<SearchResultItem>();
 
         int size = args.length;
-        for( int i = 0; i < size; i ++ ) {
+        for (int i = 0; i < size; i++) {
             String query = args[i];
             JSONObject result = _bot.Search(query);
 
             try {
                 JSONArray array = result.getJSONArray("files");
-                for (int fileDataIndex = 0; fileDataIndex < array.length(); fileDataIndex ++ ) {
+                for (int fileDataIndex = 0; fileDataIndex < array.length(); fileDataIndex++) {
                     JSONObject data = array.getJSONObject(fileDataIndex);
 
                     SearchResultItem item = new SearchResultItem(data.getString("name"), data.getString("downloadPage"));
@@ -61,7 +58,7 @@ public class SearchAsyncTask extends AsyncTask<String, Integer, ArrayList<Search
         super.onPostExecute(result);
 
         int size = result.size();
-        for( int i = 0; i < size; i ++ ) {
+        for (int i = 0; i < size; i++) {
             _adapter.add(result.get(i));
         }
         _adapter.notifyDataSetChanged();

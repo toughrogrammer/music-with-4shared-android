@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/fragment_search_edit_query"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.95"
-            android:id="@+id/fragment_search_edit_query" />
+            android:layout_weight="0.95" />
 
         <Button
+            android:id="@+id/fragment_search_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.05"
-            android:id="@+id/fragment_search_search"
             android:text="검색" />
 
-        </LinearLayout>
+    </LinearLayout>
 
     <Button
+        android:id="@+id/testbtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test"
-        android:id="@+id/testbtn"/>
+        android:text="test" />
 
     <ListView
+        android:id="@+id/fragment_search_list_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/fragment_search_list_result"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

@@ -30,12 +30,12 @@ public class ResultAdapter extends ArrayAdapter<SearchResultItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if (view == null) {
-            LayoutInflater inflater = (LayoutInflater)_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_item_search_result, parent, false);
         }
 
         SearchResultItem item = _items.get(position);
-        if( item != null ) {
+        if (item != null) {
             TextView title = (TextView) view.findViewById(R.id.list_item_search_result_title);
             title.setText(item._title);
         }
