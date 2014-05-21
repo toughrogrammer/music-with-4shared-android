@@ -29,15 +29,10 @@ public class FragmentSearch extends Fragment implements AdapterView.OnItemClickL
     private Button _searchBtn;
     private ListView _resultList;
 
-    // AsyncTask 한 번만 생성해서 다시 execute 하는 방식으로 했는데 이게 맞는건지는 모르겠음.
-    // 그냥 매번 새로 Task 만들어도 문제는 없을거라 봄. (메모리 낭비 될까봐 이렇게 함.)
-    private DownloadAsyncTask downloadAsyncTask;
-
     public FragmentSearch(Bot4Shared bot) {
         super();
 
         _bot = bot;
-        downloadAsyncTask = new DownloadAsyncTask(_bot);
     }
 
     @Override
@@ -45,7 +40,7 @@ public class FragmentSearch extends Fragment implements AdapterView.OnItemClickL
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         _editQuery = (EditText) view.findViewById(R.id.fragment_search_edit_query);
-        _editQuery.setText("love don't die");
+        _editQuery.setText("give love");
         _editQuery.setMaxLines(1);
 
         _searchBtn = (Button) view.findViewById(R.id.fragment_search_search);
@@ -75,6 +70,8 @@ public class FragmentSearch extends Fragment implements AdapterView.OnItemClickL
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         SearchResultItem row = _adapter.getItem(i);
         String path = Bot4Shared.GeneratePath(row._title);
+
+        DownloadAsyncTask downloadAsyncTask = new DownloadAsyncTask(_bot);
         downloadAsyncTask.execute(row._link, path);
     }
 }

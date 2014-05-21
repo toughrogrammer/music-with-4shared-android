@@ -268,90 +268,97 @@ public class Bot4Shared implements Serializable {
         Log.e("bot", "end");
     }
 
-    public void DownloadPreview(String url, String path) {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+    public void DownloadPreview(final String url, final String path) {
 
-        String previewUrl = "";
-        try {
-            HttpGet req = new HttpGet(url);
-            req.addHeader(new BasicHeader("User-Agent",
-                    "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53"));
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CloseableHttpClient httpClient = HttpClients.createDefault();
 
-            HttpResponse res = httpClient.execute(req);
+                String previewUrl = "";
+                try {
+                    HttpGet req = new HttpGet(url);
+                    req.addHeader(new BasicHeader("User-Agent",
+                            "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53"));
 
-            StatusLine status = res.getStatusLine();
+                    HttpResponse res = httpClient.execute(req);
 
-            this.SetCookie(res.getHeaders("Set-Cookie"));
+                    StatusLine status = res.getStatusLine();
 
-            HttpEntity entity = res.getEntity();
-            InputStream stream = entity.getContent();
-            String content = Util.ReadAll(stream);
-            stream.close();
-            req.abort();
+                    SetCookie(res.getHeaders("Set-Cookie"));
 
-            Document doc = Jsoup.parse(content);
-            Element element = doc.getElementById("player1");
-            Element source = element.child(0);
-            previewUrl = source.attr("src");
+                    HttpEntity entity = res.getEntity();
+                    InputStream stream = entity.getContent();
+                    String content = Util.ReadAll(stream);
+                    stream.close();
+                    req.abort();
 
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                    Document doc = Jsoup.parse(content);
+                    Element element = doc.getElementById("player1");
+                    Element source = element.child(0);
+                    previewUrl = source.attr("src");
 
-        try {
-            HttpGet req = new HttpGet(previewUrl);
+                } catch (ClientProtocolException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-            HttpResponse res = httpClient.execute(req);
+                try {
+                    HttpGet req = new HttpGet(previewUrl);
 
-            long realSize = 0;
-            Header[] headers = res.getAllHeaders();
-            for (int i = 0; i < headers.length; i++) {
-                Header h = headers[i];
-                if (h.getName().equals("")) {
-                    realSize = Long.parseLong(h.getValue());
+                    HttpResponse res = httpClient.execute(req);
+
+                    long realSize = 0;
+                    Header[] headers = res.getAllHeaders();
+                    for (int i = 0; i < headers.length; i++) {
+                        Header h = headers[i];
+                        if (h.getName().equals("")) {
+                            realSize = Long.parseLong(h.getValue());
+                        }
+                    }
+
+                    if (realSize == 0) {
+                        // this preview file has some error
+                    }
+
+                    File file = new File(path);
+                    if (file.exists())
+                        file.delete();
+
+                    Log.e(TAG, "download start : " + previewUrl);
+
+                    int size = 0;
+                    InputStream input = res.getEntity().getContent();
+                    FileOutputStream fos = new FileOutputStream(file);
+                    byte[] buffer = new byte[1024];
+                    int len;
+                    while ((len = input.read(buffer)) != -1) {
+                        size += len;
+                        fos.write(buffer, 0, len);
+                    }
+                    input.close();
+                    fos.close();
+
+                    Log.e(TAG, "download end : " + size);
+
+                } catch (ClientProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // close http client
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-
-            if (realSize == 0) {
-                // this preview file has some error
-            }
-
-            File file = new File(path);
-            if (file.exists())
-                file.delete();
-
-            Log.e(TAG, "download start");
-
-            int size = 0;
-            InputStream input = res.getEntity().getContent();
-            FileOutputStream fos = new FileOutputStream(file);
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = input.read(buffer)) != -1) {
-                size += len;
-                fos.write(buffer, 0, len);
-            }
-            input.close();
-            fos.close();
-
-            Log.e(TAG, "download end : " + size);
-
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // close http client
-        try {
-            httpClient.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
+        thread.start();
     }
 
     public JSONObject Search(String query) {
