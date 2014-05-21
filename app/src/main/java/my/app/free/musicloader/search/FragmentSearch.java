@@ -44,13 +44,14 @@ public class FragmentSearch extends Fragment implements AdapterView.OnItemClickL
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         _editQuery = (EditText) view.findViewById(R.id.fragment_search_edit_query);
-        _editQuery.setText("meteor shower");
+        _editQuery.setText("love don't die");
         _editQuery.setMaxLines(1);
 
         _searchBtn = (Button) view.findViewById(R.id.fragment_search_search);
         _searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                _adapter.clear();
                 SearchAsyncTask task = new SearchAsyncTask(_bot, _adapter);
                 task.execute(_editQuery.getText().toString());
             }
