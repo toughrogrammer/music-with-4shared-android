@@ -34,6 +34,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
+import my.app.free.musicloader.download.DownloadAsyncTask;
+
 /**
  * Created by loki on 2014. 5. 18..
  */
@@ -268,7 +270,7 @@ public class Bot4Shared implements Serializable {
         Log.e("bot", "end");
     }
 
-    public void DownloadPreview(final String url, final String path) {
+    public void DownloadPreview(final String url, final String path, final DownloadAsyncTask async) {
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -315,7 +317,7 @@ public class Bot4Shared implements Serializable {
                     Header[] headers = res.getAllHeaders();
                     for (int i = 0; i < headers.length; i++) {
                         Header h = headers[i];
-                        if (h.getName().equals("")) {
+                        if (h.getName().equals("Content-Length")) {
                             realSize = Long.parseLong(h.getValue());
                         }
                     }
@@ -338,6 +340,9 @@ public class Bot4Shared implements Serializable {
                     while ((len = input.read(buffer)) != -1) {
                         size += len;
                         fos.write(buffer, 0, len);
+
+                        float ratio = 1.0f * size / realSize;
+                        async.update(ratio);
                     }
                     input.close();
                     fos.close();
@@ -356,6 +361,9 @@ public class Bot4Shared implements Serializable {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                // filling progress bar completely
+                async.update(1);
             }
         });
         thread.start();

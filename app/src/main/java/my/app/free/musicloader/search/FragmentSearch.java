@@ -1,5 +1,6 @@
 package my.app.free.musicloader.search;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.R;
-import my.app.free.musicloader.download.DownloadAsyncTask;
+import my.app.free.musicloader.download.OnNewItemDownload;
 
 /**
  * Created by loki on 2014. 5. 18..
@@ -28,11 +29,18 @@ public class FragmentSearch extends Fragment implements AdapterView.OnItemClickL
     private EditText _editQuery;
     private Button _searchBtn;
     private ListView _resultList;
+    private OnNewItemDownload _onNewItemStar;
 
     public FragmentSearch(Bot4Shared bot) {
         super();
 
         _bot = bot;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        _onNewItemStar = (OnNewItemDownload) activity;
     }
 
     @Override
@@ -69,9 +77,6 @@ public class FragmentSearch extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         SearchResultItem row = _adapter.getItem(i);
-        String path = Bot4Shared.GeneratePath(row._title);
-
-        DownloadAsyncTask downloadAsyncTask = new DownloadAsyncTask(_bot);
-        downloadAsyncTask.execute(row._link, path);
+        _onNewItemStar.OnAdd(row);
     }
 }

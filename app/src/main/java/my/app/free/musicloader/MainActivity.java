@@ -6,15 +6,19 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.Locale;
 
+import my.app.free.musicloader.download.FragmentDownload;
+import my.app.free.musicloader.download.OnNewItemDownload;
 import my.app.free.musicloader.search.FragmentSearch;
+import my.app.free.musicloader.search.SearchResultItem;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnNewItemDownload {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -78,6 +82,12 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void OnAdd(SearchResultItem item) {
+        FragmentDownload downFrag = (FragmentDownload) mSectionsPagerAdapter.getItem(SectionsPagerAdapter.FRAGMENT_DOWNLOAD);
+        downFrag.ReceiveNewItem(item);
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -89,25 +99,31 @@ public class MainActivity extends Activity {
         public static final int FRAGMENT_SEARCH = 0;
         public static final int FRAGMENT_DOWNLOAD = 1;
 
+        private SparseArray<Fragment> _fragmentArray;
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+
+            _fragmentArray = new SparseArray<Fragment>();
         }
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            Fragment frag = null;
+            Fragment frag = _fragmentArray.get(position);
+            if (frag != null)
+                return frag;
+
             switch (position) {
                 case FRAGMENT_SEARCH:
                     frag = new FragmentSearch(_bot);
                     break;
                 case FRAGMENT_DOWNLOAD:
-                    frag = new FragmentSearch(_bot);
+                    frag = new FragmentDownload(_bot);
                     break;
                 case 2:
                     break;
             }
+            _fragmentArray.put(position, frag);
 
             return frag;
         }
