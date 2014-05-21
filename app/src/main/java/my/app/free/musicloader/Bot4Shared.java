@@ -330,7 +330,7 @@ public class Bot4Shared implements Serializable {
                     if (file.exists())
                         file.delete();
 
-                    Log.e(TAG, "download start : " + previewUrl);
+//                    Log.e(TAG, "download start : " + previewUrl);
 
                     int size = 0;
                     InputStream input = res.getEntity().getContent();
@@ -347,7 +347,7 @@ public class Bot4Shared implements Serializable {
                     input.close();
                     fos.close();
 
-                    Log.e(TAG, "download end : " + size);
+//                    Log.e(TAG, "download end : " + size);
 
                 } catch (ClientProtocolException e) {
                     e.printStackTrace();

@@ -39,8 +39,8 @@ public class DownloadAsyncTask extends AsyncTask<Void, Integer, Void> {
     public void update(float ratio) {
         int percent = (int) (ratio * 100);
         if (_prevPercent < percent) {
-            publishProgress(percent);
             _prevPercent = percent;
+            publishProgress(percent);
         }
     }
 }
