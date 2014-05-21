@@ -1,7 +1,6 @@
 package my.app.free.musicloader.download;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import my.app.free.musicloader.Bot4Shared;
 
@@ -18,12 +17,11 @@ public class DownloadAsyncTask extends AsyncTask<String, Integer, Void> {
 
     @Override
     protected Void doInBackground(String... args) {
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i += 2) {
             String link = args[i];
-//            link = _bot.GetDirectLink(link);
-            Log.e("DownloadAsyncTask", link);
+            String path = args[i + 1];
 
-            _bot.DownloadFileWithURL(link);
+            _bot.DownloadPreview(link, path);
         }
 
         return null;

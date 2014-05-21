@@ -1,6 +1,7 @@
 package my.app.free.musicloader;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -42,8 +43,12 @@ public class LoginActivity extends Activity {
                 AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... voids) {
-                        Bot4Shared bot = new Bot4Shared(id, password);
-                        bot.DownloadFromPreview("http://www.4shared.com/mp3/9YrdRUCMce/Pharrell_-_Happy__Despicable_M.htm", "");
+
+                        Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(i);
+
+//                        Bot4Shared bot = new Bot4Shared(id, password);
+//                        bot.DownloadFromPreview("http://www.4shared.com/mp3/9YrdRUCMce/Pharrell_-_Happy__Despicable_M.htm", "");
 
 //                        bot.SignIn();
 //                        DownloadAsyncTask task = new DownloadAsyncTask(bot);

@@ -3,7 +3,6 @@ package my.app.free.musicloader;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -41,8 +40,11 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent i = getIntent();
-        _bot = (Bot4Shared) i.getSerializableExtra("bot");
+//        Intent i = getIntent();
+//        _bot = (Bot4Shared) i.getSerializableExtra("bot");
+
+        // 원래라면 아이디 패스워드 제대로 넣어야 되는데, 현재 아이디 필요 없이 다운로드를 받도록 하고 있어서 안 넣어도 된다.
+        _bot = new Bot4Shared("", "");
 
 
         // Create the adapter that will return a fragment for each of the three

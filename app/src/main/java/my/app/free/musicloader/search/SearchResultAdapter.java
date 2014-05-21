@@ -14,12 +14,12 @@ import my.app.free.musicloader.R;
 /**
  * Created by loki on 2014. 5. 19..
  */
-public class ResultAdapter extends ArrayAdapter<SearchResultItem> {
+public class SearchResultAdapter extends ArrayAdapter<SearchResultItem> {
 
     private Context _context;
     private ArrayList<SearchResultItem> _items;
 
-    public ResultAdapter(Context context, int resource, ArrayList<SearchResultItem> objects) {
+    public SearchResultAdapter(Context context, int resource, ArrayList<SearchResultItem> objects) {
         super(context, resource, objects);
 
         _context = context;

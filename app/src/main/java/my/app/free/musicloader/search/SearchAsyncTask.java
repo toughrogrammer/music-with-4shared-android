@@ -16,9 +16,9 @@ import my.app.free.musicloader.Bot4Shared;
 public class SearchAsyncTask extends AsyncTask<String, Integer, ArrayList<SearchResultItem>> {
 
     Bot4Shared _bot;
-    ResultAdapter _adapter;
+    SearchResultAdapter _adapter;
 
-    public SearchAsyncTask(Bot4Shared bot, ResultAdapter adapter) {
+    public SearchAsyncTask(Bot4Shared bot, SearchResultAdapter adapter) {
         _bot = bot;
         _adapter = adapter;
     }

@@ -1,5 +1,6 @@
 package my.app.free.musicloader;
 
+import android.os.Environment;
 import android.util.Log;
 
 import org.apache.http.Header;
@@ -38,6 +39,7 @@ import java.util.regex.Pattern;
  */
 public class Bot4Shared implements Serializable {
 
+    public final static String PATH = "/MusicWith4Shared/";
     private String TAG = "Bot4Shared";
 
     private String _id;
@@ -50,6 +52,16 @@ public class Bot4Shared implements Serializable {
         _password = password;
 
         _cookieMap = new HashMap<String, String>();
+
+        // 우리 앱을 위한 폴더 생성
+        File dir = new File(Environment.getExternalStorageDirectory() + PATH);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+    }
+
+    public static String GeneratePath(String filename) {
+        return Environment.getExternalStorageDirectory() + PATH + filename;
     }
 
     public String getId() {
@@ -104,50 +116,6 @@ public class Bot4Shared implements Serializable {
 
         _validAccount = success;
         return success;
-    }
-
-    public JSONObject Search(String query) {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-
-        JSONObject retJson = null;
-        try {
-            String url = "http://api.4shared.com/v0/files.json?";
-            url += "oauth_consumer_key=c94c7b0a2ca7cfb7904a6721d0dfffff&";
-            url += "category=1&";
-            url += "query=" + URLEncoder.encode(query, "UTF-8");
-            url += "&offset=0&limit=3";
-
-            HttpGet req = new HttpGet(url);
-
-            HttpResponse res = httpClient.execute(req);
-
-            StatusLine status = res.getStatusLine();
-            if (status.getStatusCode() != 200) {
-                // Error is occurred!!
-            }
-
-            this.SetCookie(res.getHeaders("Set-Cookie"));
-
-            HttpEntity entity = res.getEntity();
-            InputStream stream = entity.getContent();
-            String result = Util.ReadAll(stream);
-            Log.d(TAG, result);
-            retJson = new JSONObject(result);
-
-            entity.consumeContent();
-
-            req.abort();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return retJson;
     }
 
     public String GetDirectLink(String downloadPage) {
@@ -212,7 +180,7 @@ public class Bot4Shared implements Serializable {
         return directLink;
     }
 
-    public void DownloadFileWithURL(String url) {
+    public void DownloadOfficially(String url) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
         // 먼저 다운로드 페이지에서 쿠키를 얻기 위해 한 번 HTTP Get을 한 번 날린다.
@@ -300,7 +268,7 @@ public class Bot4Shared implements Serializable {
         Log.e("bot", "end");
     }
 
-    public void DownloadFromPreview(String url, String path) {
+    public void DownloadPreview(String url, String path) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
         String previewUrl = "";
@@ -352,7 +320,7 @@ public class Bot4Shared implements Serializable {
                 // this preview file has some error
             }
 
-            File file = new File("/mnt/sdcard/testfile.mp3");
+            File file = new File(path);
             if (file.exists())
                 file.delete();
 
@@ -384,6 +352,50 @@ public class Bot4Shared implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public JSONObject Search(String query) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+
+        JSONObject retJson = null;
+        try {
+            String url = "http://api.4shared.com/v0/files.json?";
+            url += "oauth_consumer_key=c94c7b0a2ca7cfb7904a6721d0dfffff&";
+            url += "category=1&";
+            url += "query=" + URLEncoder.encode(query, "UTF-8");
+            url += "&offset=0&limit=3";
+
+            HttpGet req = new HttpGet(url);
+
+            HttpResponse res = httpClient.execute(req);
+
+            StatusLine status = res.getStatusLine();
+            if (status.getStatusCode() != 200) {
+                // Error is occurred!!
+            }
+
+            this.SetCookie(res.getHeaders("Set-Cookie"));
+
+            HttpEntity entity = res.getEntity();
+            InputStream stream = entity.getContent();
+            String result = Util.ReadAll(stream);
+            Log.d(TAG, result);
+            retJson = new JSONObject(result);
+
+            entity.consumeContent();
+
+            req.abort();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return retJson;
     }
 
     public void SetCookie(Header[] headers) {
