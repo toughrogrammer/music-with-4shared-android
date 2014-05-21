@@ -363,7 +363,7 @@ public class Bot4Shared implements Serializable {
             url += "oauth_consumer_key=c94c7b0a2ca7cfb7904a6721d0dfffff&";
             url += "category=1&";
             url += "query=" + URLEncoder.encode(query, "UTF-8");
-            url += "&offset=0&limit=3";
+//            url += "&offset=0&limit=3";
 
             HttpGet req = new HttpGet(url);
 
@@ -379,7 +379,6 @@ public class Bot4Shared implements Serializable {
             HttpEntity entity = res.getEntity();
             InputStream stream = entity.getContent();
             String result = Util.ReadAll(stream);
-            Log.d(TAG, result);
             retJson = new JSONObject(result);
 
             entity.consumeContent();

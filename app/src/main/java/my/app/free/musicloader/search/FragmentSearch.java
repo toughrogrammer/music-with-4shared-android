@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -52,6 +53,9 @@ public class FragmentSearch extends Fragment implements AdapterView.OnItemClickL
             @Override
             public void onClick(View view) {
                 _adapter.clear();
+
+                Toast.makeText(getActivity(), "검색 시작", Toast.LENGTH_SHORT).show();
+
                 SearchAsyncTask task = new SearchAsyncTask(_bot, _adapter);
                 task.execute(_editQuery.getText().toString());
             }
