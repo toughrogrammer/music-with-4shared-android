@@ -43,22 +43,9 @@ public class LoginActivity extends Activity {
                 AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... voids) {
-
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(i);
 
-//                        Bot4Shared bot = new Bot4Shared(id, password);
-//                        bot.DownloadFromPreview("http://www.4shared.com/mp3/9YrdRUCMce/Pharrell_-_Happy__Despicable_M.htm", "");
-
-//                        bot.SignIn();
-//                        DownloadAsyncTask task = new DownloadAsyncTask(bot);
-//                        task.execute("http://www.4shared.com/mp3/Wr79xnfB/107-owl_city-meteor_shower.html");
-//                        task.execute("http://www.4shared.com/mp3/9YrdRUCMce/Pharrell_-_Happy__Despicable_M.htm");
-//                        if (bot.SignIn()) {
-//                            Intent i = new Intent(LoginActivity.this, MainActivity.class);
-//                            i.putExtra("bot", bot);
-//                            startActivity(i);
-//                        }
                         return null;
                     }
                 };

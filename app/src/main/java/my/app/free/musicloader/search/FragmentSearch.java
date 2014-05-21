@@ -21,10 +21,9 @@ import my.app.free.musicloader.download.DownloadAsyncTask;
  */
 public class FragmentSearch extends Fragment implements AdapterView.OnItemClickListener {
 
-    private String TAG = "FragmentSearch";
-
     SearchResultAdapter _adapter;
     Bot4Shared _bot;
+    private String TAG = "FragmentSearch";
     private EditText _editQuery;
     private Button _searchBtn;
     private ListView _resultList;
