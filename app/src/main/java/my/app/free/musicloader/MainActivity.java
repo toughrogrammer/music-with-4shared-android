@@ -3,12 +3,15 @@ package my.app.free.musicloader;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.Locale;
 
@@ -59,6 +62,11 @@ public class MainActivity extends Activity implements OnNewItemDownload {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        //Bind the title indicator to the adapter
+        TitlePageIndicator titleIndicator = (TitlePageIndicator)findViewById(R.id.titles);
+        titleIndicator.setViewPager(mViewPager);
+        titleIndicator.setTextColor(0xff000000);
+        titleIndicator.setSelectedColor(0xff000000);
     }
 
 

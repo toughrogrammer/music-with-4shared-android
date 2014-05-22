@@ -32,4 +32,5 @@ dependencies {
 
 
     compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.3'
+    compile 'com.viewpagerindicator:library:2.4.1@aar'
 }
