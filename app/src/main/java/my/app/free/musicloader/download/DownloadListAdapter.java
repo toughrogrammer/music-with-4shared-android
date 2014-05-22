@@ -1,15 +1,21 @@
 package my.app.free.musicloader.download;
 
 import android.content.Context;
+import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.R;
 
 /**
@@ -45,6 +51,32 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
             ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
             progressBar.setMax(100);
             progressBar.setProgress((int) (item._ratio * 100));
+
+            ImageButton playBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_play);
+            playBtn.setTag(item._title);
+            playBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String tag = (String) view.getTag();
+                    String path = Bot4Shared.GeneratePath(tag);
+
+                    Log.e(TAG, path);
+
+                    MediaPlayer mp = new MediaPlayer();
+                    try {
+                        FileInputStream fis = new FileInputStream(path);
+                        mp.setDataSource(fis.getFD());
+                        mp.prepare();
+                        mp.start();
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
         return view;
