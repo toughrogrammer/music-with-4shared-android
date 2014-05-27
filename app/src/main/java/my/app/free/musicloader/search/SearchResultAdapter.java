@@ -37,7 +37,7 @@ public class SearchResultAdapter extends ArrayAdapter<SearchResultItem> {
         SearchResultItem item = _items.get(position);
         if (item != null) {
             TextView title = (TextView) view.findViewById(R.id.list_item_search_result_title);
-            title.setText(item._title);
+            title.setText(item._music._title);
         }
 
         return view;

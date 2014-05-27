@@ -46,14 +46,14 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
         DownloadListItem item = _items.get(position);
         if (item != null) {
             TextView title = (TextView) view.findViewById(R.id.list_item_download_title);
-            title.setText(item._title);
+            title.setText(item._music._title);
 
             ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
             progressBar.setMax(100);
             progressBar.setProgress((int) (item._ratio * 100));
 
             ImageButton playBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_play);
-            playBtn.setTag(item._title);
+            playBtn.setTag(item._music._title);
             playBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

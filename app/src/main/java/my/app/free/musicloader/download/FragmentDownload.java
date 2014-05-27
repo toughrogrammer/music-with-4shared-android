@@ -56,14 +56,14 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         DownloadListItem row = _adapter.getItem(i);
-        String path = Bot4Shared.GeneratePath(row._title);
+//        String path = Bot4Shared.GeneratePath(row._music._title);
     }
 
     public void ReceiveNewItem(SearchResultItem item) {
-        DownloadListItem row = new DownloadListItem(item._title, _adapter.getCount());
+        DownloadListItem row = new DownloadListItem(item._music, _adapter.getCount());
 
-        String path = Bot4Shared.GeneratePath(row._title);
-        DownloadAsyncTask downloadAsyncTask = new DownloadAsyncTask(_bot, item._link, path, row, this);
+        String path = Bot4Shared.GeneratePath(row._music._title);
+        DownloadAsyncTask downloadAsyncTask = new DownloadAsyncTask(_bot, item._music, path, row, this);
         downloadAsyncTask.execute();
 
         _adapter.add(row);

@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
+import my.app.free.musicloader.ModelMusic;
 
 /**
  * Created by loki on 2014. 5. 19..
@@ -37,7 +38,10 @@ public class SearchAsyncTask extends AsyncTask<String, Integer, ArrayList<Search
                 for (int fileDataIndex = 0; fileDataIndex < array.length(); fileDataIndex++) {
                     JSONObject data = array.getJSONObject(fileDataIndex);
 
-                    SearchResultItem item = new SearchResultItem(data.getString("name"), data.getString("downloadPage"));
+                    ModelMusic music = new ModelMusic(data.getString("name"),
+                            data.getString("hash"),
+                            data.getString("downloadPage"));
+                    SearchResultItem item = new SearchResultItem(music);
                     retList.add(item);
                 }
             } catch (JSONException e) {

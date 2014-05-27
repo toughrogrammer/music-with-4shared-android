@@ -3,6 +3,7 @@ package my.app.free.musicloader.download;
 import android.os.AsyncTask;
 
 import my.app.free.musicloader.Bot4Shared;
+import my.app.free.musicloader.ModelMusic;
 
 /**
  * Created by loki on 2014. 5. 19..
@@ -10,15 +11,15 @@ import my.app.free.musicloader.Bot4Shared;
 public class DownloadAsyncTask extends AsyncTask<Void, Integer, Void> {
 
     private Bot4Shared _bot;
-    private String _link;
+    private ModelMusic _music;
     private String _path;
     private DownloadListItem _item;
     private OnListItemProgressUpdate _listener;
     private int _prevPercent;
 
-    public DownloadAsyncTask(Bot4Shared bot, String link, String path, DownloadListItem item, OnListItemProgressUpdate listener) {
+    public DownloadAsyncTask(Bot4Shared bot, ModelMusic music, String path, DownloadListItem item, OnListItemProgressUpdate listener) {
         _bot = bot;
-        _link = link;
+        _music = music;
         _path = path;
         _item = item;
         _listener = listener;
@@ -26,7 +27,9 @@ public class DownloadAsyncTask extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected Void doInBackground(Void... args) {
-        _bot.DownloadPreview(_link, _path, this);
+        _bot.DownloadPreview(_music._link,
+                _path,
+                this);
         return null;
     }
 
