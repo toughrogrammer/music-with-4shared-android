@@ -270,16 +270,27 @@ public class Bot4Shared implements Serializable {
         Log.e("bot", "end");
     }
 
-    public void DownloadPreview(final String url, final String path, final DownloadAsyncTask async) {
+    public void DownloadPreview(String url, String path, DownloadAsyncTask async) {
 
-        Thread thread = new Thread(new Runnable() {
+        class DownloadThread extends Thread {
+
+            private String _url;
+            private String _path;
+            private DownloadAsyncTask _async;
+
+            public DownloadThread(String url, String path, DownloadAsyncTask async) {
+                _url = url;
+                _path = path;
+                _async = async;
+            }
+
             @Override
             public void run() {
                 CloseableHttpClient httpClient = HttpClients.createDefault();
 
                 String previewUrl = "";
                 try {
-                    HttpGet req = new HttpGet(url);
+                    HttpGet req = new HttpGet(_url);
                     req.addHeader(new BasicHeader("User-Agent",
                             "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53"));
 
@@ -326,7 +337,7 @@ public class Bot4Shared implements Serializable {
                         // this preview file has some error
                     }
 
-                    File file = new File(path);
+                    File file = new File(_path);
                     if (file.exists())
                         file.delete();
 
@@ -342,7 +353,7 @@ public class Bot4Shared implements Serializable {
                         fos.write(buffer, 0, len);
 
                         float ratio = 1.0f * size / realSize;
-                        async.update(ratio);
+                        _async.update(ratio);
                     }
                     input.close();
                     fos.close();
@@ -363,9 +374,10 @@ public class Bot4Shared implements Serializable {
                 }
 
                 // filling progress bar completely
-                async.update(1);
+                _async.update(1);
             }
-        });
+        };
+        Thread thread = new DownloadThread(url, path, async);
         thread.start();
     }
 
@@ -410,6 +422,99 @@ public class Bot4Shared implements Serializable {
         }
 
         return retJson;
+    }
+
+
+    public static final int VOTE_ERROR_UNKNOWN = 0;
+    public static final int VOTE_ERROR_NOT_EXIST_MUSIC = 1;
+
+    public void Vote(ModelMusic music) {
+        class VoteThread extends Thread {
+
+            ModelMusic _music;
+
+            public VoteThread(ModelMusic music) {
+                super();
+                _music = music;
+            }
+
+            @Override
+            public void run() {
+                CloseableHttpClient httpClient = HttpClients.createDefault();
+
+                String url = "http://localhost:3000/";
+
+                JSONObject resJson = null;
+                try {
+                    HttpGet req = new HttpGet(url +
+                        "vote?fileid=" + _music._hash);
+
+                    HttpResponse res = httpClient.execute(req);
+                    HttpEntity entity = res.getEntity();
+                    InputStream stream = entity.getContent();
+                    resJson = new JSONObject(Util.ReadAll(stream));
+
+                    entity.consumeContent();
+                    req.abort();
+                } catch (ClientProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                int errorCode = 0;
+                if( resJson != null ) {
+                    try {
+                        if( resJson.getInt("success") == 1 ) {
+                            return;
+                        }
+
+                        // if fail
+                        errorCode = resJson.getInt("code");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                switch( errorCode ) {
+                    case VOTE_ERROR_UNKNOWN:
+                        break;
+                    case VOTE_ERROR_NOT_EXIST_MUSIC:
+                        // send music data to server
+                        try {
+                            HttpPost req = new HttpPost();
+
+                            ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                            pairs.add(new BasicNameValuePair("hash", _music._hash));
+                            pairs.add(new BasicNameValuePair("name", _music._title));
+                            pairs.add(new BasicNameValuePair("link", _music._link));
+                            req.setEntity(new UrlEncodedFormEntity(pairs));
+
+                            httpClient.execute(req);
+                            req.abort();
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        } catch (ClientProtocolException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                }
+
+
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        VoteThread thread = new VoteThread(music);
+        thread.start();
     }
 
     public void SetCookie(Header[] headers) {
