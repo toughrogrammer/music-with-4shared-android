@@ -27,9 +27,12 @@ public class DownloadAsyncTask extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected Void doInBackground(Void... args) {
+        // 일단 다운로드 받고
         _bot.DownloadPreview(_music._link,
                 _path,
                 this);
+        // 서버한테 다운 받은 음악을 알려준다
+        _bot.Vote(_music);
         return null;
     }
 
