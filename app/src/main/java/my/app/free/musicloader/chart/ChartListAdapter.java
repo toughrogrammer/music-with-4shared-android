@@ -40,12 +40,14 @@ public class ChartListAdapter extends ArrayAdapter<ChartItem> {
         View view = convertView;
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.list_item_search_result, parent, false);
+            view = inflater.inflate(R.layout.list_item_chart, parent, false);
         }
 
         ChartItem item = this.getItem(position);
         if (item != null) {
-            TextView title = (TextView) view.findViewById(R.id.list_item_search_result_title);
+            TextView rank = (TextView) view.findViewById(R.id.list_item_chart_rank);
+            rank.setText((position + 1) + "");
+            TextView title = (TextView) view.findViewById(R.id.list_item_chart_title);
             title.setText(item._music._title);
         }
 
