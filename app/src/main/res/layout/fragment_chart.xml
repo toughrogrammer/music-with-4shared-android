@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ListView
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/fragment_chart_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent" />
 
 </LinearLayout>

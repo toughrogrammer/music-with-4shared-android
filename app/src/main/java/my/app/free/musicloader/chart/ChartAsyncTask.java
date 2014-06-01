@@ -3,6 +3,8 @@ package my.app.free.musicloader.chart;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -29,11 +31,13 @@ public class ChartAsyncTask extends AsyncTask<Void, Void, Void> {
     Bot4Shared _bot;
     ChartListAdapter _adapter;
     ArrayList<ModelMusic> _dispatchedMusics;
+    PullToRefreshListView _chartList;
 
-    public ChartAsyncTask(Bot4Shared bot, ChartListAdapter adapter) {
+    public ChartAsyncTask(Bot4Shared bot, ChartListAdapter adapter, PullToRefreshListView chartList) {
         _bot = bot;
         _adapter = adapter;
         _dispatchedMusics = new ArrayList<ModelMusic>();
+        _chartList = chartList;
     }
 
     @Override
@@ -88,5 +92,7 @@ public class ChartAsyncTask extends AsyncTask<Void, Void, Void> {
             ChartItem item = new ChartItem(music);
             _adapter.add( item );
         }
+
+        _chartList.onRefreshComplete();
     }
 }

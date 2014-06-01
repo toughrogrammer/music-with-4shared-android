@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
@@ -20,7 +23,7 @@ public class FragmentChart extends Fragment implements AdapterView.OnItemClickLi
 
     private final String TAG = "FragmentChart";
 
-    private ListView _chartList;
+    private PullToRefreshListView _chartList;
     private ChartListAdapter _adapter;
     private Bot4Shared _bot;
 
@@ -38,12 +41,18 @@ public class FragmentChart extends Fragment implements AdapterView.OnItemClickLi
                 R.layout.list_item_chart,
                 new ArrayList<ChartItem>());
 
-        _chartList = (ListView) view.findViewById(R.id.fragment_chart_list);
+        _chartList = (PullToRefreshListView) view.findViewById(R.id.fragment_chart_list);
         _chartList.setOnItemClickListener(this);
         _chartList.setAdapter(_adapter);
-
-        ChartAsyncTask task = new ChartAsyncTask(_bot, _adapter);
-        task.execute();
+        _chartList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
+                _adapter.clear();
+                ChartAsyncTask task = new ChartAsyncTask(_bot, _adapter, _chartList);
+                task.execute();
+            }
+        });
+        _chartList.setRefreshing();
 
         return view;
     }
