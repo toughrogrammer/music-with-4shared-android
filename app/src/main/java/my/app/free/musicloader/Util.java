@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
  * Created by loki on 2014. 5. 18..
  */
 public class Util {
+    public static final String SERVER_HOST = "http://223.130.82.9:7777/";
+
     public static String ReadAll(InputStream stream) {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));

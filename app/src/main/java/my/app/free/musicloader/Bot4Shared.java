@@ -2,6 +2,7 @@ package my.app.free.musicloader;
 
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -442,12 +443,14 @@ public class Bot4Shared implements Serializable {
             public void run() {
                 CloseableHttpClient httpClient = HttpClients.createDefault();
 
-                String url = "http://localhost:3000/";
+                String url = Util.SERVER_HOST;
 
                 JSONObject resJson = null;
                 try {
-                    HttpGet req = new HttpGet(url +
-                        "vote?fileid=" + _music._hash);
+                    HttpPost req = new HttpPost(url + "vote/");
+                    ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                    pairs.add(new BasicNameValuePair("hash", _music._hash));
+                    req.setEntity(new UrlEncodedFormEntity(pairs));
 
                     HttpResponse res = httpClient.execute(req);
                     HttpEntity entity = res.getEntity();
@@ -485,7 +488,7 @@ public class Bot4Shared implements Serializable {
                     case VOTE_ERROR_NOT_EXIST_MUSIC:
                         // send music data to server
                         try {
-                            HttpPost req = new HttpPost();
+                            HttpPost req = new HttpPost(url + "music/add/");
 
                             ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
                             pairs.add(new BasicNameValuePair("hash", _music._hash));

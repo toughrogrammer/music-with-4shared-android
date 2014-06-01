@@ -1,6 +1,7 @@
 package my.app.free.musicloader.search;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,9 +38,8 @@ public class SearchAsyncTask extends AsyncTask<String, Integer, ArrayList<Search
                 JSONArray array = result.getJSONArray("files");
                 for (int fileDataIndex = 0; fileDataIndex < array.length(); fileDataIndex++) {
                     JSONObject data = array.getJSONObject(fileDataIndex);
-
                     ModelMusic music = new ModelMusic(data.getString("name"),
-                            data.getString("hash"),
+                            data.getString("id"),
                             data.getString("downloadPage"));
                     SearchResultItem item = new SearchResultItem(music);
                     retList.add(item);

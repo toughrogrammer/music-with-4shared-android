@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.ModelMusic;
@@ -27,17 +28,19 @@ public class ChartAsyncTask extends AsyncTask<Void, Void, Void> {
 
     Bot4Shared _bot;
     ChartListAdapter _adapter;
+    ArrayList<ModelMusic> _dispatchedMusics;
 
     public ChartAsyncTask(Bot4Shared bot, ChartListAdapter adapter) {
         _bot = bot;
         _adapter = adapter;
+        _dispatchedMusics = new ArrayList<ModelMusic>();
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
-        String url = "http://localhost:3000/";
+        String url = Util.SERVER_HOST;
 
         try {
             HttpGet req = new HttpGet(url + "chart/list");
@@ -57,7 +60,7 @@ public class ChartAsyncTask extends AsyncTask<Void, Void, Void> {
                 Log.d("Chart", title + " " + hash);
 
                 ModelMusic music = new ModelMusic(title, hash, link);
-                _adapter.add( new ChartItem( music ) );
+                _dispatchedMusics.add( music );
             }
 
             req.abort();
@@ -75,5 +78,15 @@ public class ChartAsyncTask extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+
+        for( ModelMusic music : _dispatchedMusics ) {
+            ChartItem item = new ChartItem(music);
+            _adapter.add( item );
+        }
     }
 }
