@@ -15,6 +15,7 @@ import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.Locale;
 
+import my.app.free.musicloader.chart.FragmentChart;
 import my.app.free.musicloader.download.FragmentDownload;
 import my.app.free.musicloader.download.OnNewItemDownload;
 import my.app.free.musicloader.search.FragmentSearch;
@@ -103,9 +104,10 @@ public class MainActivity extends Activity implements OnNewItemDownload {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public static final int NUM_OF_FRAGMENT = 2;
-        public static final int FRAGMENT_SEARCH = 0;
-        public static final int FRAGMENT_DOWNLOAD = 1;
+        public static final int NUM_OF_FRAGMENT = 3;
+        public static final int FRAGMENT_CHART = 0;
+        public static final int FRAGMENT_SEARCH = 1;
+        public static final int FRAGMENT_DOWNLOAD = 2;
 
         private SparseArray<Fragment> _fragmentArray;
 
@@ -122,13 +124,14 @@ public class MainActivity extends Activity implements OnNewItemDownload {
                 return frag;
 
             switch (position) {
+                case FRAGMENT_CHART:
+                    frag = new FragmentChart(_bot);
+                    break;
                 case FRAGMENT_SEARCH:
                     frag = new FragmentSearch(_bot);
                     break;
                 case FRAGMENT_DOWNLOAD:
                     frag = new FragmentDownload(_bot);
-                    break;
-                case 2:
                     break;
             }
             _fragmentArray.put(position, frag);
@@ -145,11 +148,11 @@ public class MainActivity extends Activity implements OnNewItemDownload {
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             switch (position) {
-                case 0:
+                case FRAGMENT_CHART:
                     return getString(R.string.title_section1).toUpperCase(l);
-                case 1:
+                case FRAGMENT_SEARCH:
                     return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
+                case FRAGMENT_DOWNLOAD:
                     return getString(R.string.title_section3).toUpperCase(l);
             }
             return null;
