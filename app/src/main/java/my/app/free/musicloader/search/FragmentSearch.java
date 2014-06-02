@@ -29,7 +29,7 @@ public class FragmentSearch extends Fragment implements AdapterView.OnItemClickL
     private EditText _editQuery;
     private Button _searchBtn;
     private ListView _resultList;
-    private OnNewItemDownload _onNewItemStar;
+    private OnNewItemDownload _onNewItemStart;
 
     public FragmentSearch(Bot4Shared bot) {
         super();
@@ -40,7 +40,7 @@ public class FragmentSearch extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        _onNewItemStar = (OnNewItemDownload) activity;
+        _onNewItemStart = (OnNewItemDownload) activity;
     }
 
     @Override
@@ -77,6 +77,6 @@ public class FragmentSearch extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         SearchResultItem row = _adapter.getItem(i);
-        _onNewItemStar.OnAdd(row);
+        _onNewItemStart.OnAdd(row);
     }
 }
