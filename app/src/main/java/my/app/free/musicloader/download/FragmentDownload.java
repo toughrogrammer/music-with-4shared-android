@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
+import my.app.free.musicloader.ModelMusic;
 import my.app.free.musicloader.R;
 import my.app.free.musicloader.search.SearchResultItem;
 
@@ -59,11 +60,11 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
 //        String path = Bot4Shared.GeneratePath(row._music._title);
     }
 
-    public void ReceiveNewItem(SearchResultItem item) {
-        DownloadListItem row = new DownloadListItem(item._music, _adapter.getCount());
+    public void ReceiveNewItem(ModelMusic music) {
+        DownloadListItem row = new DownloadListItem(music, _adapter.getCount());
 
         String path = Bot4Shared.GeneratePath(row._music._title);
-        DownloadAsyncTask downloadAsyncTask = new DownloadAsyncTask(_bot, item._music, path, row, this);
+        DownloadAsyncTask downloadAsyncTask = new DownloadAsyncTask(_bot, music, path, row, this);
         downloadAsyncTask.execute();
 
         _adapter.add(row);

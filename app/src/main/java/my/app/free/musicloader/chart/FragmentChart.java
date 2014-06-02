@@ -1,5 +1,6 @@
 package my.app.free.musicloader.chart;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.R;
+import my.app.free.musicloader.download.OnNewItemDownload;
+import my.app.free.musicloader.search.SearchResultItem;
 
 /**
  * Created by loki on 2014. 5. 21..
@@ -26,6 +29,7 @@ public class FragmentChart extends Fragment implements AdapterView.OnItemClickLi
     private PullToRefreshListView _chartList;
     private ChartListAdapter _adapter;
     private Bot4Shared _bot;
+    private OnNewItemDownload _onNewItemStart;
 
     public FragmentChart(Bot4Shared bot) {
         super();
@@ -47,8 +51,7 @@ public class FragmentChart extends Fragment implements AdapterView.OnItemClickLi
         _chartList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> listViewPullToRefreshBase) {
-                _adapter.clear();
-                ChartAsyncTask task = new ChartAsyncTask(_bot, _adapter, _chartList);
+                ChartAsyncTask task = new ChartAsyncTask(getActivity(), _bot, _adapter, _chartList);
                 task.execute();
             }
         });
@@ -58,7 +61,14 @@ public class FragmentChart extends Fragment implements AdapterView.OnItemClickLi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        _onNewItemStart = (OnNewItemDownload) activity;
+    }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        ChartItem row = _adapter.getItem(i);
+        _onNewItemStart.OnAdd(row._music);
     }
 }

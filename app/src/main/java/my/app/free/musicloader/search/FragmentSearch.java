@@ -77,6 +77,6 @@ public class FragmentSearch extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         SearchResultItem row = _adapter.getItem(i);
-        _onNewItemStart.OnAdd(row);
+        _onNewItemStart.OnAdd(row._music);
     }
 }

@@ -92,9 +92,9 @@ public class MainActivity extends Activity implements OnNewItemDownload {
     }
 
     @Override
-    public void OnAdd(SearchResultItem item) {
+    public void OnAdd(ModelMusic music) {
         FragmentDownload downFrag = (FragmentDownload) mSectionsPagerAdapter.getItem(SectionsPagerAdapter.FRAGMENT_DOWNLOAD);
-        downFrag.ReceiveNewItem(item);
+        downFrag.ReceiveNewItem(music);
     }
 
 
