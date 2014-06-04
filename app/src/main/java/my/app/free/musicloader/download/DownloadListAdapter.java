@@ -1,8 +1,6 @@
 package my.app.free.musicloader.download;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +10,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
+import my.app.free.musicloader.ModelMusic;
 import my.app.free.musicloader.R;
+import my.app.free.musicloader.download.musicplayer.MusicPlayer;
 
 /**
  * Created by loki on 2014. 5. 21..
@@ -28,12 +26,14 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
 
     private Context _context;
     private ArrayList<DownloadListItem> _items;
+    private MusicPlayer _musicPlayer;
 
-    public DownloadListAdapter(Context context, int resource, ArrayList<DownloadListItem> objects) {
+    public DownloadListAdapter(Context context, int resource, ArrayList<DownloadListItem> objects, MusicPlayer player) {
         super(context, resource, objects);
 
         _context = context;
         _items = objects;
+        _musicPlayer = player;
     }
 
     @Override
@@ -57,28 +57,12 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
             }
 
             ImageButton playBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_play);
-            playBtn.setTag(item._music._title);
+            playBtn.setTag(item._music);
             playBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String tag = (String) view.getTag();
-                    String path = Bot4Shared.GeneratePath(tag);
-
-                    Log.e(TAG, path);
-
-                    MediaPlayer mp = new MediaPlayer();
-                    try {
-                        FileInputStream fis = new FileInputStream(path);
-                        mp.setDataSource(fis.getFD());
-                        mp.prepare();
-                        mp.start();
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (IllegalStateException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    ModelMusic music = (ModelMusic) view.getTag();
+                    _musicPlayer.Play(music);
                 }
             });
 
@@ -103,5 +87,17 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
         }
 
         return view;
+    }
+
+    @Override
+    public void add(DownloadListItem object) {
+        super.add(object);
+        _musicPlayer.AddMusic(object._music);
+    }
+
+    @Override
+    public void remove(DownloadListItem object) {
+        super.remove(object);
+        _musicPlayer.RemoveMusic(object._music);
     }
 }

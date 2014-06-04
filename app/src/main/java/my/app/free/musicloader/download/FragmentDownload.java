@@ -3,13 +3,15 @@ package my.app.free.musicloader.download;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ToggleButton;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,23 +19,25 @@ import java.util.ArrayList;
 import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.ModelMusic;
 import my.app.free.musicloader.R;
-import my.app.free.musicloader.search.SearchResultItem;
+import my.app.free.musicloader.download.musicplayer.MusicPlayer;
+import my.app.free.musicloader.download.musicplayer.PlayOption;
 
 /**
  * Created by loki on 2014. 5. 21..
  */
-public class FragmentDownload extends Fragment implements AdapterView.OnItemClickListener, OnListItemProgressUpdate {
+public class FragmentDownload extends Fragment implements AdapterView.OnItemClickListener, OnListItemProgressUpdate, View.OnClickListener {
 
     DownloadListAdapter _adapter;
     Bot4Shared _bot;
     private String TAG = "FragmentDownload";
     private ListView _downloadList;
+    private MusicPlayer _musicPlayer;
 
     public FragmentDownload(Bot4Shared bot) {
         super();
 
         _bot = bot;
-
+        _musicPlayer = new MusicPlayer();
     }
 
     @Override
@@ -42,7 +46,8 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
 
         _adapter = new DownloadListAdapter(getActivity(),
                 R.layout.list_item_download,
-                new ArrayList<DownloadListItem>());
+                new ArrayList<DownloadListItem>(),
+                _musicPlayer);
 
         _downloadList = (ListView) view.findViewById(R.id.fragment_download_list);
         _downloadList.setOnItemClickListener(this);
@@ -61,6 +66,34 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
             }
             _adapter.notifyDataSetChanged();
         }
+
+        _musicPlayer.RefreshOrder();
+
+
+        Button playBtn = (Button) view.findViewById(R.id.fragment_download_play);
+        playBtn.setOnClickListener(this);
+
+        Button pauseBtn = (Button) view.findViewById(R.id.fragment_download_pause);
+        pauseBtn.setOnClickListener(this);
+
+        Button prevBtn = (Button) view.findViewById(R.id.fragment_download_prev);
+        prevBtn.setOnClickListener(this);
+
+        Button nextBtn = (Button) view.findViewById(R.id.fragment_download_next);
+        nextBtn.setOnClickListener(this);
+
+        ToggleButton playOptionToggleBtn = (ToggleButton) view.findViewById(R.id.fragment_download_israndom);
+        playOptionToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    _musicPlayer.SetPlayOption(PlayOption.Random);
+                } else {
+                    _musicPlayer.SetPlayOption(PlayOption.InOrder);
+                }
+                _musicPlayer.RefreshOrder();
+            }
+        });
 
         return view;
     }
@@ -85,7 +118,6 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
     @Override
     public void OnProgressUpdate(int position, int progress) {
         View view = _downloadList.getChildAt(position);
-        Log.d(TAG, "OnProgressUpdate : " + view);
         if (view != null) {
             ProgressBar bar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
 
@@ -94,8 +126,24 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
             }
 
             bar.setProgress(progress);
+        }
+    }
 
-            Log.d(TAG, "progress : " + progress);
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.fragment_download_play:
+                _musicPlayer.Play();
+                break;
+            case R.id.fragment_download_pause:
+                _musicPlayer.Pause();
+                break;
+            case R.id.fragment_download_prev:
+                _musicPlayer.Prev();
+                break;
+            case R.id.fragment_download_next:
+                _musicPlayer.Next();
+                break;
         }
     }
 }
