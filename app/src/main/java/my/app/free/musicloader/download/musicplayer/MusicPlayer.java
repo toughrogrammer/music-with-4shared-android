@@ -11,6 +11,9 @@ import java.util.Collections;
 import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.ModelMusic;
 
+import static my.app.free.musicloader.download.musicplayer.LoopOption.NoLoop;
+import static my.app.free.musicloader.download.musicplayer.LoopOption.RepeatOne;
+
 /**
  * Created by loki on 2014. 6. 4..
  */
@@ -21,6 +24,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
     private int _currIndex = 0;
 
     private PlayOption _playOption = PlayOption.InOrder;
+    private LoopOption _loopOption = NoLoop;
     private ArrayList<Integer> _playerOrder;
 
     public MusicPlayer() {
@@ -124,6 +128,17 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        Next();
+        switch( _loopOption ) {
+            case NoLoop:
+                _mediaPlayer.stop();
+                break;
+            case RepeatOne:
+                _mediaPlayer.seekTo(0);
+                _mediaPlayer.start();
+                break;
+            case RepeatAll:
+                Next();
+                break;
+        }
     }
 }
