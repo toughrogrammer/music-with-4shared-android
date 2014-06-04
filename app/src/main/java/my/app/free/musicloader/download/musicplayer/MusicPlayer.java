@@ -3,7 +3,6 @@ package my.app.free.musicloader.download.musicplayer;
 import android.media.MediaPlayer;
 import android.util.Log;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
 
     public void Play(int index) {
         try {
-            if( _mediaPlayer.isPlaying() )
+            if (_mediaPlayer.isPlaying())
                 _mediaPlayer.stop();
 
             int i = _playerOrder.indexOf(index);
@@ -63,7 +62,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
     }
 
     public void Pause() {
-        if( _mediaPlayer.isPlaying() )
+        if (_mediaPlayer.isPlaying())
             _mediaPlayer.pause();
         else
             _mediaPlayer.start();
@@ -73,9 +72,9 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
         int i = _musics.indexOf(music);
         _musics.remove(music);
 
-        if( _currIndex == _playerOrder.indexOf(i) ) {
+        if (_currIndex == _playerOrder.indexOf(i)) {
             _playerOrder.remove(i);
-            if( _currIndex == _playerOrder.size() )
+            if (_currIndex == _playerOrder.size())
                 RefreshOrder();
         }
     }
@@ -86,11 +85,11 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
 
     public void RefreshOrder() {
         ArrayList<Integer> newOrder = new ArrayList<Integer>();
-        for( int i = 0; i < _musics.size(); i ++ ) {
+        for (int i = 0; i < _musics.size(); i++) {
             newOrder.add(i);
         }
 
-        if( _playOption == PlayOption.Random ) {
+        if (_playOption == PlayOption.Random) {
             Collections.shuffle(newOrder);
         }
         _playerOrder = newOrder;
@@ -98,8 +97,8 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
     }
 
     public void Shuffle() {
-        ArrayList<Integer> newOrder=  new ArrayList<Integer>();
-        for( int i = 0; i < _musics.size(); i ++ ) {
+        ArrayList<Integer> newOrder = new ArrayList<Integer>();
+        for (int i = 0; i < _musics.size(); i++) {
             newOrder.add(i);
         }
 
@@ -109,7 +108,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
 
     public void Next() {
         _currIndex++;
-        if( _currIndex == _playerOrder.size() )
+        if (_currIndex == _playerOrder.size())
             RefreshOrder();
 
         Play(_currIndex);
@@ -117,7 +116,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
 
     public void Prev() {
         _currIndex--;
-        if( _currIndex < 0 )
+        if (_currIndex < 0)
             _currIndex = _playerOrder.size() - 1;
 
         Play(_currIndex);

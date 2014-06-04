@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.R;
 import my.app.free.musicloader.download.OnNewItemDownload;
-import my.app.free.musicloader.search.SearchResultItem;
 
 /**
  * Created by loki on 2014. 5. 21..

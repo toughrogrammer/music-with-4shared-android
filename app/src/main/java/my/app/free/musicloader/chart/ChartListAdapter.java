@@ -1,24 +1,15 @@
 package my.app.free.musicloader.chart;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.R;
-import my.app.free.musicloader.download.DownloadListItem;
-import my.app.free.musicloader.search.SearchResultItem;
 
 /**
  * Created by loki on 2014. 5. 21..

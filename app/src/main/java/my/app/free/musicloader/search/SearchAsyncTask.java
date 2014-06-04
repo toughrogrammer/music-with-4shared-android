@@ -1,7 +1,6 @@
 package my.app.free.musicloader.search;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;

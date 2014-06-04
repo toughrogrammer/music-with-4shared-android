@@ -10,15 +10,15 @@
         android:id="@+id/list_item_chart_rank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
         android:text="100"
-        android:textStyle="bold"
-        android:layout_marginRight="20dp"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/list_item_chart_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="title"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
 
 </LinearLayout>

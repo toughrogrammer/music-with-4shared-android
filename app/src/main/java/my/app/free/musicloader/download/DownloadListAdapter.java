@@ -52,7 +52,7 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
             ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
             progressBar.setMax(100);
             progressBar.setProgress((int) (item._ratio * 100));
-            if( (int) (item._ratio * 100) == 100 ) {
+            if ((int) (item._ratio * 100) == 100) {
                 progressBar.setVisibility(View.INVISIBLE);
             }
 
@@ -77,7 +77,7 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
                     String path = Bot4Shared.GeneratePath(item._music._title);
 
                     File file = new File(path);
-                    if( file != null ) {
+                    if (file != null) {
                         file.delete();
                         remove(item);
                         notifyDataSetChanged();

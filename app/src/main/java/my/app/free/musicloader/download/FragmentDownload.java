@@ -54,12 +54,12 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
         _downloadList.setAdapter(_adapter);
 
         File dir = new File(Environment.getExternalStorageDirectory() + Bot4Shared.PATH);
-        if( dir != null ) {
+        if (dir != null) {
             File[] files = dir.listFiles();
-            for( File file : files ) {
+            for (File file : files) {
                 String name = file.getName();
 
-                ModelMusic music = new ModelMusic(name, "",  "");
+                ModelMusic music = new ModelMusic(name, "", "");
                 DownloadListItem item = new DownloadListItem(music, _adapter.getCount());
                 item._ratio = 1;
                 _adapter.add(item);
@@ -121,7 +121,7 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
         if (view != null) {
             ProgressBar bar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
 
-            if( progress == 100 ) {
+            if (progress == 100) {
                 bar.setVisibility(View.INVISIBLE);
             }
 
@@ -131,7 +131,7 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onClick(View view) {
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.fragment_download_play:
                 _musicPlayer.Play();
                 break;

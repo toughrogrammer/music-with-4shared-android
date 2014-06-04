@@ -26,25 +26,25 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />
 
-        </LinearLayout>
+    </LinearLayout>
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/list_item_download_btn_play"
-        android:src="@drawable/download_list_item_button_play"
-        android:background="@color/transparent"
-        android:layout_weight="0.1"
-        android:layout_marginLeft="20dp"/>
-
-    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/list_item_download_btn_delete"
-        android:src="@drawable/download_list_item_button_delete"
-        android:background="@color/transparent"
+        android:layout_marginLeft="20dp"
         android:layout_weight="0.1"
-        android:layout_marginLeft="0dp"/>
+        android:background="@color/transparent"
+        android:src="@drawable/download_list_item_button_play" />
+
+    <ImageButton
+        android:id="@+id/list_item_download_btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_weight="0.1"
+        android:background="@color/transparent"
+        android:src="@drawable/download_list_item_button_delete" />
 
 
 </LinearLayout>

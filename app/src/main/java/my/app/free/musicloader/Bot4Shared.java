@@ -2,7 +2,6 @@ package my.app.free.musicloader;
 
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -43,8 +42,9 @@ import my.app.free.musicloader.download.DownloadAsyncTask;
 public class Bot4Shared implements Serializable {
 
     public final static String PATH = "/MusicWith4Shared/";
+    public static final int VOTE_ERROR_UNKNOWN = 0;
+    public static final int VOTE_ERROR_NOT_EXIST_MUSIC = 1;
     private String TAG = "Bot4Shared";
-
     private String _id;
     private String _password;
     private boolean _validAccount = false;
@@ -82,7 +82,6 @@ public class Bot4Shared implements Serializable {
     public void setPassword(String password) {
         _password = password;
     }
-
 
     public boolean SignIn() {
         boolean success = false;
@@ -377,7 +376,8 @@ public class Bot4Shared implements Serializable {
                 // filling progress bar completely
                 _async.update(1);
             }
-        };
+        }
+        ;
         Thread thread = new DownloadThread(url, path, async);
         thread.start();
     }
@@ -425,10 +425,6 @@ public class Bot4Shared implements Serializable {
         return retJson;
     }
 
-
-    public static final int VOTE_ERROR_UNKNOWN = 0;
-    public static final int VOTE_ERROR_NOT_EXIST_MUSIC = 1;
-
     public void Vote(ModelMusic music) {
         class VoteThread extends Thread {
 
@@ -469,9 +465,9 @@ public class Bot4Shared implements Serializable {
 
 
                 int errorCode = 0;
-                if( resJson != null ) {
+                if (resJson != null) {
                     try {
-                        if( resJson.getInt("success") == 1 ) {
+                        if (resJson.getInt("success") == 1) {
                             return;
                         }
 
@@ -482,7 +478,7 @@ public class Bot4Shared implements Serializable {
                     }
                 }
 
-                switch( errorCode ) {
+                switch (errorCode) {
                     case VOTE_ERROR_UNKNOWN:
                         break;
                     case VOTE_ERROR_NOT_EXIST_MUSIC:

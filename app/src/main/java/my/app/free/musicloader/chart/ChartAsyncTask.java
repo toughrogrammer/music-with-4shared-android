@@ -11,7 +11,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -25,7 +24,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
@@ -75,7 +73,7 @@ public class ChartAsyncTask extends AsyncTask<Void, Void, Void> {
             JSONObject json = new JSONObject(Util.ReadAll(stream));
 
             JSONArray dataList = json.getJSONArray("data");
-            for( int i = 0; i < dataList.length(); i ++ ) {
+            for (int i = 0; i < dataList.length(); i++) {
                 JSONObject data = dataList.getJSONObject(i);
                 String title = data.getString("name");
                 String hash = data.getString("hash");
@@ -84,7 +82,7 @@ public class ChartAsyncTask extends AsyncTask<Void, Void, Void> {
                 Log.d("Chart", title + " " + hash);
 
                 ModelMusic music = new ModelMusic(title, hash, link);
-                _dispatchedMusics.add( music );
+                _dispatchedMusics.add(music);
             }
 
             req.abort();
@@ -124,9 +122,9 @@ public class ChartAsyncTask extends AsyncTask<Void, Void, Void> {
         }
 
         _adapter.clear();
-        for( ModelMusic music : _dispatchedMusics ) {
+        for (ModelMusic music : _dispatchedMusics) {
             ChartItem item = new ChartItem(music);
-            _adapter.add( item );
+            _adapter.add(item);
         }
         _chartList.onRefreshComplete();
     }
