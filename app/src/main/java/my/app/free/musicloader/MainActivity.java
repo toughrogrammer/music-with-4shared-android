@@ -68,6 +68,7 @@ public class MainActivity extends Activity implements OnNewItemDownload {
         titleIndicator.setViewPager(mViewPager);
         titleIndicator.setTextColor(0xff000000);
         titleIndicator.setSelectedColor(0xff000000);
+        titleIndicator.setCurrentItem(2);
     }
 
 

@@ -4,12 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="15dp">
+    android:padding="15dp"
+    android:weightSum="1.0">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="0.9"
+        android:layout_weight="0.8"
         android:orientation="vertical">
 
         <TextView
@@ -33,7 +34,17 @@
         android:id="@+id/list_item_download_btn_play"
         android:src="@drawable/download_list_item_button_play"
         android:background="@color/transparent"
+        android:layout_weight="0.1"
         android:layout_marginLeft="20dp"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_item_download_btn_delete"
+        android:src="@drawable/download_list_item_button_delete"
+        android:background="@color/transparent"
+        android:layout_weight="0.1"
+        android:layout_marginLeft="0dp"/>
 
 
 </LinearLayout>

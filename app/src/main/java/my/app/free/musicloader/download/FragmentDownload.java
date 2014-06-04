@@ -2,6 +2,8 @@ package my.app.free.musicloader.download;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
@@ -45,6 +48,20 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
         _downloadList.setOnItemClickListener(this);
         _downloadList.setAdapter(_adapter);
 
+        File dir = new File(Environment.getExternalStorageDirectory() + Bot4Shared.PATH);
+        if( dir != null ) {
+            File[] files = dir.listFiles();
+            for( File file : files ) {
+                String name = file.getName();
+
+                ModelMusic music = new ModelMusic(name, "",  "");
+                DownloadListItem item = new DownloadListItem(music, _adapter.getCount());
+                item._ratio = 1;
+                _adapter.add(item);
+            }
+            _adapter.notifyDataSetChanged();
+        }
+
         return view;
     }
 
@@ -68,9 +85,17 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
     @Override
     public void OnProgressUpdate(int position, int progress) {
         View view = _downloadList.getChildAt(position);
+        Log.d(TAG, "OnProgressUpdate : " + view);
         if (view != null) {
             ProgressBar bar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
+
+            if( progress == 100 ) {
+                bar.setVisibility(View.INVISIBLE);
+            }
+
             bar.setProgress(progress);
+
+            Log.d(TAG, "progress : " + progress);
         }
     }
 }

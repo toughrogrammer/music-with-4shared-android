@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
             ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
             progressBar.setMax(100);
             progressBar.setProgress((int) (item._ratio * 100));
+            if( (int) (item._ratio * 100) == 100 ) {
+                progressBar.setVisibility(View.INVISIBLE);
+            }
 
             ImageButton playBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_play);
             playBtn.setTag(item._music._title);
@@ -74,6 +78,25 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }
+                }
+            });
+
+            ImageButton deleteBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_delete);
+            deleteBtn.setTag(position);
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = (Integer) view.getTag();
+                    DownloadListItem item = getItem(pos);
+
+                    String path = Bot4Shared.GeneratePath(item._music._title);
+
+                    File file = new File(path);
+                    if( file != null ) {
+                        file.delete();
+                        remove(item);
+                        notifyDataSetChanged();
                     }
                 }
             });
