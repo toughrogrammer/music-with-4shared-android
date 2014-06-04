@@ -45,12 +45,6 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
         _downloadList.setOnItemClickListener(this);
         _downloadList.setAdapter(_adapter);
 
-        View v = _downloadList.getChildAt(0);
-        if (v != null) {
-            ProgressBar bar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
-            bar.setProgress(50);
-        }
-
         return view;
     }
 
