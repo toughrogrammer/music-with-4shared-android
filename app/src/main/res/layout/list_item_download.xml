@@ -4,13 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="15dp"
-    android:weightSum="1.0">
+    android:padding="15dp" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.8"
+        android:layout_weight="4"
         android:orientation="vertical">
 
         <TextView
@@ -28,23 +27,29 @@
 
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/list_item_download_btn_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_weight="0.1"
-        android:background="@color/transparent"
-        android:src="@drawable/download_list_item_button_play" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="10">
 
-    <ImageButton
-        android:id="@+id/list_item_download_btn_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_weight="0.1"
-        android:background="@color/transparent"
-        android:src="@drawable/download_list_item_button_delete" />
+        <ImageButton
+            android:id="@+id/list_item_download_btn_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@color/transparent"
+            android:src="@drawable/download_list_item_button_play" />
+
+        <ImageButton
+            android:id="@+id/list_item_download_btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/list_item_download_btn_play"
+            android:layout_marginRight="10dp"
+            android:background="@color/transparent"
+            android:src="@drawable/download_list_item_button_delete" />
+
+    </RelativeLayout>
 
 
 </LinearLayout>
