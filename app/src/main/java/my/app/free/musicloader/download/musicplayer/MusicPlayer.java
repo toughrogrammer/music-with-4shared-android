@@ -87,6 +87,10 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
         _playOption = option;
     }
 
+    public void SetLoopOption(LoopOption option) {
+        _loopOption = option;
+    }
+
     public void RefreshOrder() {
         ArrayList<Integer> newOrder = new ArrayList<Integer>();
         for (int i = 0; i < _musics.size(); i++) {

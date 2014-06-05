@@ -6,17 +6,20 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/fragment_download_layout_control"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
+            style="?android:attr/buttonStyleSmall"
             android:id="@+id/fragment_download_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Play" />
 
         <Button
+            style="?android:attr/buttonStyleSmall"
             android:id="@+id/fragment_download_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,16 +33,19 @@
             android:textOn="Random" />
 
         <Button
+            style="?android:attr/buttonStyleSmall"
             android:id="@+id/fragment_download_prev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Prev" />
 
         <Button
+            style="?android:attr/buttonStyleSmall"
             android:id="@+id/fragment_download_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Next" />
+
     </LinearLayout>
 
     <ListView

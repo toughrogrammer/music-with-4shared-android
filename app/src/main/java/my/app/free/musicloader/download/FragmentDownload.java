@@ -1,6 +1,7 @@
 package my.app.free.musicloader.download;
 
 import android.app.Fragment;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ToggleButton;
@@ -18,7 +20,9 @@ import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.ModelMusic;
+import my.app.free.musicloader.MultiStateButton;
 import my.app.free.musicloader.R;
+import my.app.free.musicloader.download.musicplayer.LoopOption;
 import my.app.free.musicloader.download.musicplayer.MusicPlayer;
 import my.app.free.musicloader.download.musicplayer.PlayOption;
 
@@ -94,6 +98,25 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
                 _musicPlayer.RefreshOrder();
             }
         });
+
+        // 반복 옵션 버튼 생성 작업 부분
+        ArrayList<Integer> loopStates = new ArrayList<Integer>();
+        loopStates.add( R.drawable.button_repeat_none );
+        loopStates.add( R.drawable.button_repeat_one );
+        loopStates.add( R.drawable.button_repeat_all );
+        MultiStateButton loopOptionBtn = new MultiStateButton(getActivity(), loopStates);
+        loopOptionBtn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        loopOptionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MultiStateButton btn = (MultiStateButton) view;
+                btn.Next();
+                _musicPlayer.SetLoopOption(LoopOption.values()[ btn.GetCurrentState() ]);
+            }
+        });
+
+        LinearLayout layout = (LinearLayout) view.findViewById(R.id.fragment_download_layout_control);
+        layout.addView(loopOptionBtn);
 
         return view;
     }
