@@ -115,8 +115,18 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
             }
         });
 
+        Button seekButton = new Button(getActivity());
+        seekButton.setText("S");
+        seekButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _musicPlayer.Seek(0.95);
+            }
+        });
+
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.fragment_download_layout_control);
         layout.addView(loopOptionBtn);
+        layout.addView(seekButton);
 
         return view;
     }

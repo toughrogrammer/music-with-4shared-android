@@ -72,6 +72,15 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
             _mediaPlayer.start();
     }
 
+    public void Seek(double ratio) {
+        if( ! _mediaPlayer.isPlaying() )
+            return;
+
+        int duration = _mediaPlayer.getDuration();
+        duration *= ratio;
+        _mediaPlayer.seekTo(duration);
+    }
+
     public void RemoveMusic(ModelMusic music) {
         int i = _musics.indexOf(music);
         _musics.remove(music);
