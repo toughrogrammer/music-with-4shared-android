@@ -166,16 +166,22 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fragment_download_play:
-                _musicPlayer.Play();
+                if( _musicPlayer.GetNumberOfMusic() > 0 ) {
+                    _musicPlayer.Play();
+                }
                 break;
             case R.id.fragment_download_pause:
                 _musicPlayer.Pause();
                 break;
             case R.id.fragment_download_prev:
-                _musicPlayer.Prev();
+                if( _musicPlayer.GetCurrentPlaying() != null ) {
+                    _musicPlayer.Prev();
+                }
                 break;
             case R.id.fragment_download_next:
-                _musicPlayer.Next();
+                if( _musicPlayer.GetCurrentPlaying() != null ) {
+                    _musicPlayer.Next();
+                }
                 break;
         }
     }

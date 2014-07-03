@@ -34,6 +34,10 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
         _mediaPlayer = new MediaPlayer();
     }
 
+    public int GetNumberOfMusic() {
+        return _musics.size();
+    }
+
     public void AddMusic(ModelMusic music) {
         _musics.add(music);
         RefreshOrder();
@@ -164,6 +168,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
         switch( _loopOption ) {
             case NoLoop:
                 _mediaPlayer.stop();
+                _currPlaying = null;
                 break;
             case RepeatOne:
                 _mediaPlayer.seekTo(0);
