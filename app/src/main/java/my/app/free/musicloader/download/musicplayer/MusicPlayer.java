@@ -12,6 +12,7 @@ import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.ModelMusic;
 
 import static my.app.free.musicloader.download.musicplayer.LoopOption.NoLoop;
+import static my.app.free.musicloader.download.musicplayer.LoopOption.RepeatAll;
 import static my.app.free.musicloader.download.musicplayer.LoopOption.RepeatOne;
 
 /**
@@ -22,6 +23,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
     private ArrayList<ModelMusic> _musics;
     private MediaPlayer _mediaPlayer;
     private int _currIndex = 0;
+    private ModelMusic _currPlaying;
 
     private PlayOption _playOption = PlayOption.InOrder;
     private LoopOption _loopOption = NoLoop;
@@ -34,6 +36,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
 
     public void AddMusic(ModelMusic music) {
         _musics.add(music);
+        RefreshOrder();
     }
 
     public void Play(int index) {
@@ -44,6 +47,8 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
             int i = _playerOrder.indexOf(index);
             String path = Bot4Shared.GeneratePath(_musics.get(i)._title);
             Log.d(TAG, path);
+            _currPlaying = _musics.get(i);
+
             _mediaPlayer.reset();
             _mediaPlayer.setDataSource(path);
             _mediaPlayer.prepare();
@@ -82,6 +87,14 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
     }
 
     public void RemoveMusic(ModelMusic music) {
+        boolean isRemovedCurrentPlaying = false;
+        ModelMusic curr = GetCurrentPlaying();
+        if( curr._title == music._title ) {
+            Pause();
+            isRemovedCurrentPlaying = true;
+        }
+
+
         int i = _musics.indexOf(music);
         _musics.remove(music);
 
@@ -90,6 +103,9 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
             if (_currIndex == _playerOrder.size())
                 RefreshOrder();
         }
+
+        if( isRemovedCurrentPlaying && _loopOption == RepeatAll )
+            Play();
     }
 
     public void SetPlayOption(PlayOption option) {
@@ -121,6 +137,10 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
 
         Collections.shuffle(newOrder);
         _playerOrder = newOrder;
+    }
+
+    public ModelMusic GetCurrentPlaying() {
+        return _currPlaying;
     }
 
     public void Next() {
