@@ -65,7 +65,11 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
                 @Override
                 public void onClick(View view) {
                     ModelMusic music = (ModelMusic) view.getTag();
-                    _musicPlayer.Play(music);
+                    if( _musicPlayer.GetCurrentPlaying()._title == music._title ) {
+                        _musicPlayer.Pause();
+                    } else {
+                        _musicPlayer.Play(music);
+                    }
                 }
             });
 
