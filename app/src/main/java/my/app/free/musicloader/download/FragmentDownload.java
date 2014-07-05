@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -152,10 +153,21 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
     public void OnProgressUpdate(int position, int progress) {
         View view = _downloadList.getChildAt(position);
         if (view != null) {
-            ProgressBar bar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
+            boolean isDownloadingComplete = false;
+            if( progress == 100 ) {
+                isDownloadingComplete = true;
+            }
 
-            if (progress == 100) {
+            ProgressBar bar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
+            ImageButton playBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_play);
+
+            if( isDownloadingComplete ) {
                 bar.setVisibility(View.INVISIBLE);
+                playBtn.setVisibility(View.VISIBLE);
+            } else {
+                if( progress <= 10 ) {
+                    playBtn.setVisibility(View.INVISIBLE);
+                }
             }
 
             bar.setProgress(progress);

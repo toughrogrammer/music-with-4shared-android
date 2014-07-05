@@ -55,9 +55,6 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
             ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
             progressBar.setMax(100);
             progressBar.setProgress((int) (item._ratio * 100));
-            if ((int) (item._ratio * 100) == 100) {
-                progressBar.setVisibility(View.INVISIBLE);
-            }
 
             ImageButton playBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_play);
             playBtn.setTag(item._music);
@@ -65,13 +62,21 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
                 @Override
                 public void onClick(View view) {
                     ModelMusic music = (ModelMusic) view.getTag();
-                    if( _musicPlayer.GetCurrentPlaying()._title == music._title ) {
+                    ModelMusic currPlaying = _musicPlayer.GetCurrentPlaying();
+                    if( currPlaying != null && currPlaying._title == music._title ) {
                         _musicPlayer.Pause();
                     } else {
                         _musicPlayer.Play(music);
                     }
                 }
             });
+
+            if ((int) (item._ratio * 100) == 100) {
+                progressBar.setVisibility(View.INVISIBLE);
+                playBtn.setVisibility(View.VISIBLE);
+            } else {
+                playBtn.setVisibility(View.INVISIBLE);
+            }
 
             ImageButton deleteBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_delete);
             deleteBtn.setTag(position);
