@@ -92,7 +92,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
     public void RemoveMusic(ModelMusic music) {
         boolean isRemovedCurrentPlaying = false;
         ModelMusic curr = GetCurrentPlaying();
-        if (curr._title == music._title) {
+        if (curr != null && curr._title == music._title) {
             Pause();
             isRemovedCurrentPlaying = true;
         }
