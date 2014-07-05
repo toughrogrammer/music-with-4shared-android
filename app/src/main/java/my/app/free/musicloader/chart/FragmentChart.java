@@ -14,12 +14,10 @@ import android.widget.ListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.R;
-import my.app.free.musicloader.download.DownloadListItem;
 import my.app.free.musicloader.download.OnNewItemDownload;
 
 /**

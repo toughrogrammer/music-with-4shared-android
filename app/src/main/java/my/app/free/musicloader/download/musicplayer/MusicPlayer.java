@@ -13,7 +13,6 @@ import my.app.free.musicloader.ModelMusic;
 
 import static my.app.free.musicloader.download.musicplayer.LoopOption.NoLoop;
 import static my.app.free.musicloader.download.musicplayer.LoopOption.RepeatAll;
-import static my.app.free.musicloader.download.musicplayer.LoopOption.RepeatOne;
 
 /**
  * Created by loki on 2014. 6. 4..
@@ -82,7 +81,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
     }
 
     public void Seek(double ratio) {
-        if( ! _mediaPlayer.isPlaying() )
+        if (!_mediaPlayer.isPlaying())
             return;
 
         int duration = _mediaPlayer.getDuration();
@@ -93,7 +92,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
     public void RemoveMusic(ModelMusic music) {
         boolean isRemovedCurrentPlaying = false;
         ModelMusic curr = GetCurrentPlaying();
-        if( curr._title == music._title ) {
+        if (curr._title == music._title) {
             Pause();
             isRemovedCurrentPlaying = true;
         }
@@ -108,7 +107,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
                 RefreshOrder();
         }
 
-        if( isRemovedCurrentPlaying && _loopOption == RepeatAll )
+        if (isRemovedCurrentPlaying && _loopOption == RepeatAll)
             Play();
     }
 
@@ -165,7 +164,7 @@ public class MusicPlayer implements MediaPlayer.OnCompletionListener {
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        switch( _loopOption ) {
+        switch (_loopOption) {
             case NoLoop:
                 _mediaPlayer.stop();
                 _currPlaying = null;

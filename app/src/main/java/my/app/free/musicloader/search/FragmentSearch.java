@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 import my.app.free.musicloader.Bot4Shared;
 import my.app.free.musicloader.R;
-import my.app.free.musicloader.chart.ChartItem;
 import my.app.free.musicloader.download.OnNewItemDownload;
 
 /**

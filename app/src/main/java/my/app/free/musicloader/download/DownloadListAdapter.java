@@ -63,7 +63,7 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
                 public void onClick(View view) {
                     ModelMusic music = (ModelMusic) view.getTag();
                     ModelMusic currPlaying = _musicPlayer.GetCurrentPlaying();
-                    if( currPlaying != null && currPlaying._title == music._title ) {
+                    if (currPlaying != null && currPlaying._title == music._title) {
                         _musicPlayer.Pause();
                     } else {
                         _musicPlayer.Play(music);

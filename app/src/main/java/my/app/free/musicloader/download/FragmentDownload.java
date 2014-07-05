@@ -1,7 +1,6 @@
 package my.app.free.musicloader.download;
 
 import android.app.Fragment;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -102,9 +101,9 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
 
         // 반복 옵션 버튼 생성 작업 부분
         ArrayList<Integer> loopStates = new ArrayList<Integer>();
-        loopStates.add( R.drawable.button_repeat_none );
-        loopStates.add( R.drawable.button_repeat_one );
-        loopStates.add( R.drawable.button_repeat_all );
+        loopStates.add(R.drawable.button_repeat_none);
+        loopStates.add(R.drawable.button_repeat_one);
+        loopStates.add(R.drawable.button_repeat_all);
         MultiStateButton loopOptionBtn = new MultiStateButton(getActivity(), loopStates);
         loopOptionBtn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         loopOptionBtn.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +111,7 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
             public void onClick(View view) {
                 MultiStateButton btn = (MultiStateButton) view;
                 btn.Next();
-                _musicPlayer.SetLoopOption(LoopOption.values()[ btn.GetCurrentState() ]);
+                _musicPlayer.SetLoopOption(LoopOption.values()[btn.GetCurrentState()]);
             }
         });
 
@@ -154,18 +153,18 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
         View view = _downloadList.getChildAt(position);
         if (view != null) {
             boolean isDownloadingComplete = false;
-            if( progress == 100 ) {
+            if (progress == 100) {
                 isDownloadingComplete = true;
             }
 
             ProgressBar bar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
             ImageButton playBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_play);
 
-            if( isDownloadingComplete ) {
+            if (isDownloadingComplete) {
                 bar.setVisibility(View.INVISIBLE);
                 playBtn.setVisibility(View.VISIBLE);
             } else {
-                if( progress <= 10 ) {
+                if (progress <= 10) {
                     playBtn.setVisibility(View.INVISIBLE);
                 }
             }
@@ -178,7 +177,7 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fragment_download_play:
-                if( _musicPlayer.GetNumberOfMusic() > 0 ) {
+                if (_musicPlayer.GetNumberOfMusic() > 0) {
                     _musicPlayer.Play();
                 }
                 break;
@@ -186,12 +185,12 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
                 _musicPlayer.Pause();
                 break;
             case R.id.fragment_download_prev:
-                if( _musicPlayer.GetCurrentPlaying() != null ) {
+                if (_musicPlayer.GetCurrentPlaying() != null) {
                     _musicPlayer.Prev();
                 }
                 break;
             case R.id.fragment_download_next:
-                if( _musicPlayer.GetCurrentPlaying() != null ) {
+                if (_musicPlayer.GetCurrentPlaying() != null) {
                     _musicPlayer.Next();
                 }
                 break;
