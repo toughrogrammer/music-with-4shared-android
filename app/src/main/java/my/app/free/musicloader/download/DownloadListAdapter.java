@@ -128,6 +128,16 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> implemen
         builder.create().show();
     }
 
+    public boolean FindByModel(ModelMusic music) {
+        for( DownloadListItem item : _items ) {
+            if( item._music._title == music._title ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void UpdateViewByState(View view, DownloadListItem.DownloadState state) {
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
         ImageButton playBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_play);

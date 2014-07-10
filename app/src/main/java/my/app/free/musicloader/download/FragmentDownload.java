@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.File;
@@ -137,6 +138,11 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
     }
 
     public void ReceiveNewItem(ModelMusic music) {
+        if( _adapter.FindByModel(music) ) {
+            Toast.makeText(this.getActivity(), "이미 존재하는 곡입니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         DownloadListItem row = new DownloadListItem(music);
         row._state = DownloadListItem.DownloadState.Downloading;
 
