@@ -23,7 +23,7 @@ import my.app.free.musicloader.download.musicplayer.MusicPlayer;
 /**
  * Created by loki on 2014. 5. 21..
  */
-public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
+public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> implements View.OnClickListener {
 
     private final String TAG = "DownloadListAdapter";
 
@@ -58,53 +58,13 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
 
             ImageButton playBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_play);
             playBtn.setTag(item._music);
-            playBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ModelMusic music = (ModelMusic) view.getTag();
-                    ModelMusic currPlaying = _musicPlayer.GetCurrentPlaying();
-                    if (currPlaying != null && currPlaying._title == music._title) {
-                        _musicPlayer.Pause();
-                    } else {
-                        _musicPlayer.Play(music);
-                    }
-                }
-            });
-
-            if ((int) (item._ratio * 100) == 100) {
-                progressBar.setVisibility(View.INVISIBLE);
-                playBtn.setVisibility(View.VISIBLE);
-            } else {
-                playBtn.setVisibility(View.INVISIBLE);
-            }
+            playBtn.setOnClickListener(this);
 
             ImageButton deleteBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_delete);
             deleteBtn.setTag(position);
-            deleteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(_context);
-                    builder.setMessage("정말 지우시겠습니까?")
-                            .setCancelable(true)
-                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    int pos = (Integer) view.getTag();
-                                    DownloadListItem item = getItem(pos);
+            deleteBtn.setOnClickListener(this);
 
-                                    String path = Bot4Shared.GeneratePath(item._music._title);
-                                    File file = new File(path);
-                                    if (file != null) {
-                                        file.delete();
-                                        remove(item);
-                                        notifyDataSetChanged();
-                                    }
-                                }
-                            })
-                            .setNegativeButton("아니오", null);
-                    builder.create().show();
-                }
-            });
+            UpdateViewByState(view, item._state);
         }
 
         return view;
@@ -121,5 +81,66 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadListItem> {
     public void remove(DownloadListItem object) {
         super.remove(object);
         _musicPlayer.RemoveMusic(object._music);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.list_item_download_btn_play:
+                OnClickButtonPlay(view);
+                break;
+            case R.id.list_item_download_btn_delete:
+                OnClickButtonDelete(view);
+                break;
+        }
+    }
+
+    public void OnClickButtonPlay(View view) {
+        ModelMusic music = (ModelMusic) view.getTag();
+        ModelMusic currPlaying = _musicPlayer.GetCurrentPlaying();
+        if (currPlaying != null && currPlaying._title == music._title) {
+            _musicPlayer.Pause();
+        } else {
+            _musicPlayer.Play(music);
+        }
+    }
+
+    public void OnClickButtonDelete(final View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+        builder.setMessage("정말 지우시겠습니까?")
+                .setCancelable(true)
+                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int pos = (Integer) view.getTag();
+                        DownloadListItem item = getItem(pos);
+
+                        String path = Bot4Shared.GeneratePath(item._music._title);
+                        File file = new File(path);
+                        if (file != null) {
+                            file.delete();
+                            remove(item);
+                            notifyDataSetChanged();
+                        }
+                    }
+                })
+                .setNegativeButton("아니오", null);
+        builder.create().show();
+    }
+
+    public void UpdateViewByState(View view, DownloadListItem.DownloadState state) {
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
+        ImageButton playBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_play);
+
+        switch (state) {
+            case Downloading:
+                progressBar.setVisibility(View.VISIBLE);
+                playBtn.setVisibility(View.INVISIBLE);
+                break;
+            case Finished:
+                progressBar.setVisibility(View.INVISIBLE);
+                playBtn.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 }

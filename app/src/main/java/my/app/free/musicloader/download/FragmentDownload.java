@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -64,7 +63,7 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
                 String name = file.getName();
 
                 ModelMusic music = new ModelMusic(name, "", "");
-                DownloadListItem item = new DownloadListItem(music, _adapter.getCount());
+                DownloadListItem item = new DownloadListItem(music);
                 item._ratio = 1;
                 _adapter.add(item);
             }
@@ -138,10 +137,11 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
     }
 
     public void ReceiveNewItem(ModelMusic music) {
-        DownloadListItem row = new DownloadListItem(music, _adapter.getCount());
+        DownloadListItem row = new DownloadListItem(music);
+        row._state = DownloadListItem.DownloadState.Downloading;
 
         String path = Bot4Shared.GeneratePath(row._music._title);
-        DownloadAsyncTask downloadAsyncTask = new DownloadAsyncTask(_bot, music, path, row, this);
+        DownloadAsyncTask downloadAsyncTask = new DownloadAsyncTask(_bot, path, row, this);
         downloadAsyncTask.execute();
 
         _adapter.add(row);
@@ -149,28 +149,21 @@ public class FragmentDownload extends Fragment implements AdapterView.OnItemClic
     }
 
     @Override
-    public void OnProgressUpdate(int position, int progress) {
-        View view = _downloadList.getChildAt(position);
-        if (view != null) {
-            boolean isDownloadingComplete = false;
-            if (progress == 100) {
-                isDownloadingComplete = true;
-            }
-
-            ProgressBar bar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
-            ImageButton playBtn = (ImageButton) view.findViewById(R.id.list_item_download_btn_play);
-
-            if (isDownloadingComplete) {
-                bar.setVisibility(View.INVISIBLE);
-                playBtn.setVisibility(View.VISIBLE);
-            } else {
-                if (progress <= 10) {
-                    playBtn.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            bar.setProgress(progress);
+    public void OnProgressUpdate(DownloadListItem item, int progress) {
+        // below code quality is not good
+        View view = _downloadList.getChildAt(_adapter.getPosition(item));
+        if (view == null) {
+            // there is error!
+            return;
         }
+
+        if (progress == 100) {
+            item._state = DownloadListItem.DownloadState.Finished;
+            _adapter.UpdateViewByState(view, item._state);
+        }
+
+        ProgressBar bar = (ProgressBar) view.findViewById(R.id.list_item_download_progressBar);
+        bar.setProgress(progress);
     }
 
     @Override
